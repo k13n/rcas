@@ -21,23 +21,23 @@ public:
 
   ~SurrogateCas();
 
-  void Insert(Key<VType>& key);
+  void Insert(Key<VType>& key) override;
 
-  uint64_t BulkLoad(std::deque<Key<VType>>& keys);
+  uint64_t BulkLoad(std::deque<Key<VType>>& keys) override;
+
+  const QueryStats Query(SearchKey<VType>& key,
+      Emitter<VType> emitter) override;
 
   const QueryStats Query(SearchKey<VType>& key,
       BinaryKeyEmitter emitter);
 
-  const QueryStats Query(SearchKey<VType>& key,
-      Emitter<VType> emitter);
+  const QueryStats QueryRuntime(SearchKey<VType>& key) override;
 
-  const QueryStats QueryRuntime(SearchKey<VType>& key);
+  const cas::IndexStats Stats() const override;
 
-  const cas::IndexStats Stats() const;
+  size_t NrKeys() const override;
 
-  size_t NrKeys() const;
-
-  void Describe() const;
+  void Describe() const override;
 };
 
 

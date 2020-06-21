@@ -73,14 +73,14 @@ void cas::InsertionStatic::MatchPrefix() {
   while (ikey_pos_ < ikey_.bytes_.size()) {
     InterleavedByte& ib = ikey_.bytes_[ikey_pos_];
     switch (ib.dimension_) {
-    case cas::Path:
+    case cas::Dimension::Path:
       if (p_pos_ < node_->separator_pos_ && node_->prefix_[p_pos_] == ib.byte_) {
         ++p_pos_;
       } else {
         return;
       }
       break;
-    case cas::Value:
+    case cas::Dimension::Value:
       if (v_pos_ < node_->prefix_.size() && node_->prefix_[v_pos_] == ib.byte_) {
         ++v_pos_;
       } else {
@@ -109,8 +109,8 @@ bool cas::InsertionStatic::AddRefToExistingLeaf() {
 
 cas::Node* cas::InsertionStatic::SplitNode() {
   switch (ikey_.bytes_[ikey_pos_].dimension_) {
-    case cas::Path:  return SplitNodeByPath();
-    case cas::Value: return SplitNodeByValue();
+    case cas::Dimension::Path:  return SplitNodeByPath();
+    case cas::Dimension::Value: return SplitNodeByValue();
     default: assert(false);
   }
   return nullptr;

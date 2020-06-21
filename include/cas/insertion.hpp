@@ -29,11 +29,9 @@ private:
 
   bool AddRefToExistingLeaf();
 
-  cas::Node* SplitNode();
+  cas::Node* Restructure();
 
-  cas::Node* SplitByPath();
-
-  cas::Node* SplitByValue();
+  cas::Dimension DetermineDimension();
 };
 
 

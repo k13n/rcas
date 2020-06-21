@@ -32,7 +32,7 @@ using DoubleSearchKey = SearchKey<double>;
 using StringSearchKey = SearchKey<std::string>;
 
 
-enum ByteType {
+enum class ByteType {
   kTypeLabel,
   kTypePathSeperator,
   kTypeWildcard,

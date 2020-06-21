@@ -27,7 +27,8 @@ bool cas::Insertion::Execute() {
   if (loc_.matcher_.KeyFullyMatched()) {
     return AddRefToExistingLeaf();
   } else if (loc_.matcher_.HasMismatch()) {
-    cas::Node* new_intermediate = SplitNode();
+    cas::Node* new_intermediate = Restructure();
+    /* cas::Node* new_intermediate = SplitNode(); */
     if (loc_.parent_ == nullptr) {
       *root_ = new_intermediate;
     } else {
@@ -45,143 +46,101 @@ bool cas::Insertion::Execute() {
 }
 
 
-cas::Node* cas::Insertion::SplitNode() {
+cas::Node* cas::Insertion::Restructure() {
+  cas::Dimension d = DetermineDimension();
+  int offset_p = (d == cas::Dimension::Path)  ? 1 : 0;
+  int offset_v = (d == cas::Dimension::Value) ? 1 : 0;
+
+  std::vector<uint8_t> prefix = loc_.node_->prefix_;
+  loc_.node_->prefix_.clear();
+
+  // creating the new parent, setting its prefix
+  cas::Node* new_parent = new cas::Node4(d);
+  std::copy(
+      prefix.begin(),
+      prefix.begin() + loc_.matcher_.node_p_pos_,
+      std::back_inserter(new_parent->prefix_));
+  new_parent->separator_pos_ = new_parent->prefix_.size();
+  std::copy(
+      prefix.begin() + loc_.node_->separator_pos_,
+      prefix.begin() + loc_.matcher_.node_v_pos_,
+      std::back_inserter(new_parent->prefix_));
+
+  // setting the prefix of node_
+  std::copy(
+      prefix.begin() + loc_.matcher_.node_p_pos_ + offset_p,
+      prefix.begin() + loc_.node_->separator_pos_,
+      std::back_inserter(loc_.node_->prefix_));
+  loc_.node_->separator_pos_ = loc_.node_->prefix_.size();
+  std::copy(
+      prefix.begin() + loc_.matcher_.node_v_pos_ + offset_v,
+      prefix.end(),
+      std::back_inserter(loc_.node_->prefix_));
+
+  // creaating the new sibling, setting its prefix
+  cas::Node* new_sibling = new cas::Node0(bkey_,
+      loc_.matcher_.bkey_p_pos_ + offset_p,
+      loc_.matcher_.bkey_v_pos_ + offset_v);
+
+  // find the values of the discriminative bytes that distinguish
+  // node_ and new_sibling
+  uint8_t dv_node, dv_sibling;
+  if (d == cas::Dimension::Path) {
+    dv_node = prefix[loc_.matcher_.node_p_pos_];
+    dv_sibling = bkey_.path_[loc_.matcher_.bkey_p_pos_];
+  } else {
+    dv_node = prefix[loc_.matcher_.node_v_pos_];
+    dv_sibling = bkey_.value_[loc_.matcher_.bkey_v_pos_];
+  }
+
+  // link node_ and new_sibling as children of new_parent
+  new_parent->Put(dv_node, loc_.node_);
+  new_parent->Put(dv_sibling, new_sibling);
+
+  return new_parent;
+}
+
+
+cas::Dimension cas::Insertion::DetermineDimension() {
   if (loc_.matcher_.value_mismatch_ && loc_.matcher_.path_mismatch_) {
     if (loc_.parent_ == nullptr) {
       // loc_.node_ is the root node
       switch (loc_.node_->dimension_) {
-      case cas::Dimension::Path:
-        return SplitByValue();
-      case cas::Dimension::Value:
-        return SplitByPath();
+      case cas::Dimension::Path:  return cas::Dimension::Value;
+      case cas::Dimension::Value: return cas::Dimension::Path;
       case cas::Dimension::Leaf:
         return (root_dimension_ == cas::Dimension::Path)
-               ? SplitByPath() : SplitByValue();
-      default:
-        assert(false);
-        return nullptr;
+               ? cas::Dimension::Path : cas::Dimension::Value;
       }
     } else {
       switch (loc_.parent_->dimension_) {
-      case cas::Dimension::Path:
-        return SplitByValue();
-      case cas::Dimension::Value:
-        return SplitByPath();
+      case cas::Dimension::Path:  return cas::Dimension::Value;
+      case cas::Dimension::Value: return cas::Dimension::Path;
       default:
         assert(false);
-        return nullptr;
+        throw std::runtime_error("Impossible");
       }
     }
   } else if (loc_.matcher_.path_mismatch_) {
-    return SplitByPath();
+    return cas::Dimension::Path;
   } else { // loc_.matcher_.value_mismatch_
-    return SplitByValue();
+    return cas::Dimension::Value;
   }
-}
-
-
-cas::Node* cas::Insertion::SplitByPath() {
-  std::vector<uint8_t> prefix = loc_.node_->prefix_;
-  loc_.node_->prefix_.clear();
-
-  // creaating the new sibling, setting its prefix
-  cas::Node* new_sibling = new cas::Node0(
-      bkey_,
-      loc_.matcher_.bkey_p_pos_+1,
-      loc_.matcher_.bkey_v_pos_);
-
-  // setting the prefix of new_parent
-  cas::Node* new_parent = new cas::Node4(cas::Dimension::Path);
-  std::copy(
-      prefix.begin(),
-      prefix.begin() + loc_.matcher_.node_p_pos_,
-      std::back_inserter(new_parent->prefix_));
-  new_parent->separator_pos_ = new_parent->prefix_.size();
-  std::copy(
-      prefix.begin() + loc_.node_->separator_pos_,
-      prefix.begin() + loc_.matcher_.node_v_pos_,
-      std::back_inserter(new_parent->prefix_));
-
-  // setting the prefix of node_
-  std::copy(
-      prefix.begin() + loc_.matcher_.node_p_pos_ + 1,
-      prefix.begin() + loc_.node_->separator_pos_,
-      std::back_inserter(loc_.node_->prefix_));
-  loc_.node_->separator_pos_ = loc_.node_->prefix_.size();
-  std::copy(
-      prefix.begin() + loc_.matcher_.node_v_pos_,
-      prefix.end(),
-      std::back_inserter(loc_.node_->prefix_));
-
-  // find the discriminator bytes that distinguish node_ and new_sibling
-  uint8_t discriminator_sibling = bkey_.path_[loc_.matcher_.bkey_p_pos_];
-  uint8_t discriminator_node    = prefix[loc_.matcher_.node_p_pos_];
-
-  // link node_ and new_sibling as children of new_parent
-  new_parent->Put(discriminator_node, loc_.node_);
-  new_parent->Put(discriminator_sibling, new_sibling);
-
-  return new_parent;
-}
-
-
-cas::Node* cas::Insertion::SplitByValue() {
-  std::vector<uint8_t> prefix = loc_.node_->prefix_;
-  loc_.node_->prefix_.clear();
-
-  // creaating the new sibling, setting its prefix
-  cas::Node* new_sibling = new cas::Node0(
-      bkey_,
-      loc_.matcher_.bkey_p_pos_,
-      loc_.matcher_.bkey_v_pos_+1);
-
-  // setting the prefix of new_parent
-  cas::Node* new_parent = new cas::Node4(cas::Dimension::Value);
-  std::copy(
-      prefix.begin(),
-      prefix.begin() + loc_.matcher_.node_p_pos_,
-      std::back_inserter(new_parent->prefix_));
-  new_parent->separator_pos_ = new_parent->prefix_.size();
-  std::copy(
-      prefix.begin() + loc_.node_->separator_pos_,
-      prefix.begin() + loc_.matcher_.node_v_pos_,
-      std::back_inserter(new_parent->prefix_));
-
-  // setting the prefix of node_
-  std::copy(
-      prefix.begin() + loc_.matcher_.node_p_pos_,
-      prefix.begin() + loc_.node_->separator_pos_,
-      std::back_inserter(loc_.node_->prefix_));
-  loc_.node_->separator_pos_ = loc_.node_->prefix_.size();
-  std::copy(
-      prefix.begin() + loc_.matcher_.node_v_pos_ + 1,
-      prefix.end(),
-      std::back_inserter(loc_.node_->prefix_));
-
-  // find the discriminator bytes that distinguish node_ and new_sibling
-  uint8_t discriminator_sibling = bkey_.value_[loc_.matcher_.bkey_v_pos_];
-  uint8_t discriminator_node    = prefix[loc_.matcher_.node_v_pos_];
-
-  // link node_ and new_sibling as children of new_parent
-  new_parent->Put(discriminator_node, loc_.node_);
-  new_parent->Put(discriminator_sibling, new_sibling);
-
-  return new_parent;
 }
 
 
 void cas::Insertion::AddNewLeaf() {
   cas::Node* new_leaf = nullptr;
-  uint8_t discriminator_byte = 0x00;
+  uint8_t discriminative_byte = 0x00;
 
   switch (loc_.node_->Type()) {
   case cas::Dimension::Path:
-    discriminator_byte = bkey_.path_[loc_.matcher_.bkey_p_pos_];
+    discriminative_byte = bkey_.path_[loc_.matcher_.bkey_p_pos_];
     new_leaf = new cas::Node0(bkey_,
         loc_.matcher_.bkey_p_pos_+1, loc_.matcher_.bkey_v_pos_);
     break;
   case cas::Dimension::Value:
-    discriminator_byte = bkey_.value_[loc_.matcher_.bkey_v_pos_];
+    discriminative_byte = bkey_.value_[loc_.matcher_.bkey_v_pos_];
     new_leaf = new cas::Node0(bkey_,
         loc_.matcher_.bkey_p_pos_, loc_.matcher_.bkey_v_pos_+1);
     break;
@@ -192,7 +151,7 @@ void cas::Insertion::AddNewLeaf() {
 
   if (loc_.node_->IsFull()) {
     cas::Node* new_node = loc_.node_->Grow();
-    new_node->Put(discriminator_byte, new_leaf);
+    new_node->Put(discriminative_byte, new_leaf);
     if (loc_.parent_ == nullptr) {
       *root_ = new_node;
     } else {
@@ -200,7 +159,7 @@ void cas::Insertion::AddNewLeaf() {
     }
     delete loc_.node_;
   } else {
-    loc_.node_->Put(discriminator_byte, new_leaf);
+    loc_.node_->Put(discriminative_byte, new_leaf);
   }
 }
 

@@ -16,7 +16,7 @@ struct BinaryKey {
   std::vector<uint8_t> value_;
   ref_t ref_ = 0;
 
-  const std::vector<uint8_t>& Get(cas::Dimension dimension);
+  const std::vector<uint8_t>& Get(cas::Dimension dimension) const;
 
   void Dump() const;
 };

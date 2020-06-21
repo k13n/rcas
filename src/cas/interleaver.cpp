@@ -36,11 +36,11 @@ cas::InterleavedKey cas::Interleaver::ZOrder(const cas::BinaryKey& bkey) {
 
   while (p_pos < bkey.path_.size() || v_pos < bkey.value_.size()) {
     for (int i = 0; i < v_run_len && v_pos < bkey.value_.size(); ++i) {
-      ikey.bytes_.push_back({ .byte_ = bkey.value_[v_pos], .dimension_ = Value });
+      ikey.bytes_.push_back({ .byte_ = bkey.value_[v_pos], .dimension_ = Dimension::Value });
       ++v_pos;
     }
     for (int i = 0; i < p_run_len && p_pos < bkey.path_.size(); ++i) {
-      ikey.bytes_.push_back({ .byte_ = bkey.path_[p_pos],  .dimension_ = Path });
+      ikey.bytes_.push_back({ .byte_ = bkey.path_[p_pos],  .dimension_ = Dimension::Path });
       ++p_pos;
     }
   }
@@ -64,11 +64,11 @@ cas::InterleavedKey cas::Interleaver::LabelWise(const cas::BinaryKey& bkey) {
       return;
     }
     do {
-      ikey.bytes_.push_back({ .byte_ = bkey.path_[p_pos], .dimension_ = Path });
+      ikey.bytes_.push_back({ .byte_ = bkey.path_[p_pos], .dimension_ = Dimension::Path });
       ++p_pos;
     } while (p_pos < bkey.path_.size() && bkey.path_[p_pos] != cas::kPathSep);
     if (p_pos < bkey.path_.size()) {
-      ikey.bytes_.push_back({ .byte_ = bkey.path_[p_pos], .dimension_ = Path });
+      ikey.bytes_.push_back({ .byte_ = bkey.path_[p_pos], .dimension_ = Dimension::Path });
       ++p_pos;
     }
   };
@@ -76,7 +76,7 @@ cas::InterleavedKey cas::Interleaver::LabelWise(const cas::BinaryKey& bkey) {
     if (v_pos >= bkey.value_.size()) {
       return;
     }
-    ikey.bytes_.push_back({ .byte_ = bkey.value_[v_pos], .dimension_ = Value });
+    ikey.bytes_.push_back({ .byte_ = bkey.value_[v_pos], .dimension_ = Dimension::Value });
     ++v_pos;
   };
 
@@ -94,10 +94,10 @@ cas::InterleavedKey cas::Interleaver::PathValue(const cas::BinaryKey& bkey) {
   ikey.bytes_.reserve(bkey.path_.size() + bkey.value_.size());
   ikey.ref_ = bkey.ref_;
   for (size_t i = 0; i < bkey.path_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.path_[i], .dimension_ = Path });
+    ikey.bytes_.push_back({ .byte_ = bkey.path_[i], .dimension_ = Dimension::Path });
   }
   for (size_t i = 0; i < bkey.value_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.value_[i], .dimension_ = Value });
+    ikey.bytes_.push_back({ .byte_ = bkey.value_[i], .dimension_ = Dimension::Value });
   }
   return ikey;
 }
@@ -108,10 +108,10 @@ cas::InterleavedKey cas::Interleaver::ValuePath(const cas::BinaryKey& bkey) {
   ikey.bytes_.reserve(bkey.path_.size() + bkey.value_.size());
   ikey.ref_ = bkey.ref_;
   for (size_t i = 0; i < bkey.value_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.value_[i], .dimension_ = Value });
+    ikey.bytes_.push_back({ .byte_ = bkey.value_[i], .dimension_ = Dimension::Value });
   }
   for (size_t i = 0; i < bkey.path_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.path_[i], .dimension_ = Path });
+    ikey.bytes_.push_back({ .byte_ = bkey.path_[i], .dimension_ = Dimension::Path });
   }
   return ikey;
 }

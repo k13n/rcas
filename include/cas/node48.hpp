@@ -15,23 +15,23 @@ public:
 
   Node48(Dimension dimension);
 
-  bool IsFull();
+  bool IsFull() override;
 
-  void Put(uint8_t key_byte, Node* child);
+  void Put(uint8_t key_byte, Node* child) override;
 
-  Node* LocateChild(uint8_t key_byte);
+  Node* LocateChild(uint8_t key_byte) override;
 
-  Node* Grow();
+  Node* Grow() override;
 
-  void ReplaceBytePointer(uint8_t key_byte, Node* child);
+  void ReplaceBytePointer(uint8_t key_byte, Node* child) override;
 
-  void ForEachChild(uint8_t low, uint8_t high, ChildIt callback);
+  void ForEachChild(uint8_t low, uint8_t high, ChildIt callback) override;
 
-  size_t SizeBytes();
+  size_t SizeBytes() override;
 
-  void Dump();
+  void Dump() override;
 
-  int NodeWidth();
+  int NodeWidth() override;
 
 private:
   void DumpIndexes();

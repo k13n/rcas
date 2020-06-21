@@ -23,15 +23,20 @@ public:
 
   Cas(IndexType type);
 
-  ~Cas();
+  ~Cas() override;
 
-  void Insert(Key<VType>& key);
+  void Insert(Key<VType>& key) override;
 
   void Insert(BinaryKey& bkey);
 
-  uint64_t BulkLoad(std::deque<Key<VType>>& keys);
+  uint64_t BulkLoad(std::deque<Key<VType>>& keys) override;
 
   uint64_t BulkLoad(std::deque<BinaryKey>& keys);
+
+  const QueryStats QueryRuntime(SearchKey<VType>& key) override;
+
+  const QueryStats Query(SearchKey<VType>& key,
+      Emitter<VType> emitter) override;
 
   const QueryStats Query(SearchKey<VType>& key,
       BinaryKeyEmitter emitter);
@@ -39,12 +44,7 @@ public:
   const QueryStats Query(SearchKey<VType>& key,
       RefEmitter emitter);
 
-  const QueryStats Query(SearchKey<VType>& key,
-      Emitter<VType> emitter);
-
-  const QueryStats QueryRuntime(SearchKey<VType>& key);
-
-  void Describe() const;
+  void Describe() const override;
 
   void Dump() const;
 
@@ -52,9 +52,9 @@ public:
 
   size_t Size() const;
 
-  const cas::IndexStats Stats() const;
+  const cas::IndexStats Stats() const override;
 
-  size_t NrKeys() const;
+  size_t NrKeys() const override;
 
 private:
   void DeleteNodesRecursively(Node *node);

@@ -37,29 +37,29 @@ public:
     data_guide_(cas::IndexType::DynamicInterleaving)
   {}
 
-  ~CasXml();
+  ~CasXml() override;
 
-  void Insert(cas::Key<VType>& key);
+  void Insert(cas::Key<VType>& key) override;
 
   void Delete(cas::Key<VType>& key);
 
-  uint64_t BulkLoad(std::deque<cas::Key<VType>>& keys);
+  uint64_t BulkLoad(std::deque<cas::Key<VType>>& keys) override;
+
+  const cas::QueryStats Query(cas::SearchKey<VType>& key,
+      cas::Emitter<VType> emitter) override;
 
   const cas::QueryStats Query(cas::SearchKey<VType>& key,
       bool decode, cas::Emitter<VType> emitter);
 
-  const cas::QueryStats Query(cas::SearchKey<VType>& key,
-      cas::Emitter<VType> emitter);
-
-  const cas::QueryStats QueryRuntime(cas::SearchKey<VType>& key);
+  const cas::QueryStats QueryRuntime(cas::SearchKey<VType>& key) override;
 
   void Dump();
 
-  void Describe() const;
+  void Describe() const override;
 
-  const cas::IndexStats Stats() const;
+  const cas::IndexStats Stats() const override;
 
-  size_t NrKeys() const;
+  size_t NrKeys() const override;
 
 private:
   uint64_t ComputePcr(cas::Key<VType>& key);

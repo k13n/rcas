@@ -19,33 +19,33 @@ public:
 
   Node0(const InterleavedKey& ikey, size_t pos);
 
-  inline bool IsLeaf() {
+  inline bool IsLeaf() override {
     return true;
   };
 
-  inline bool IsFull() {
+  inline bool IsFull() override {
     return true;
   }
 
-  void Put(uint8_t key_byte, Node *child);
+  void Put(uint8_t key_byte, Node *child) override;
 
-  Node* LocateChild(uint8_t key_byte);
+  Node* LocateChild(uint8_t key_byte) override;
 
-  inline Node* Grow() {
+  inline Node* Grow() override {
     return nullptr;
   }
 
-  void ReplaceBytePointer(uint8_t key_byte, Node* child);
+  void ReplaceBytePointer(uint8_t key_byte, Node* child) override;
 
-  void ForEachChild(uint8_t low, uint8_t high, ChildIt callback);
+  void ForEachChild(uint8_t low, uint8_t high, ChildIt callback) override;
 
-  size_t SizeBytes();
+  size_t SizeBytes() override;
 
-  void Dump();
+  void Dump() override;
 
   bool ContainsRef(ref_t ref);
 
-  int NodeWidth();
+  int NodeWidth() override;
 };
 
 

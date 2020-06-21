@@ -11,7 +11,7 @@ namespace cas {
 
 class PathMatcher {
 public:
-  enum PrefixMatch {
+  enum class PrefixMatch {
     MATCH,
     MISMATCH,
     INCOMPLETE,

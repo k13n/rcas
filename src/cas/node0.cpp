@@ -30,13 +30,13 @@ cas::Node0::Node0(const InterleavedKey& ikey, size_t pos)
   prefix_.reserve(ikey.bytes_.size() - pos);
 
   for (size_t i = pos; i < ikey.bytes_.size(); ++i) {
-    if (ikey.bytes_[i].dimension_ == Path) {
+    if (ikey.bytes_[i].dimension_ == Dimension::Path) {
       prefix_.push_back(ikey.bytes_[i].byte_);
     }
   }
   separator_pos_ = prefix_.size();
   for (size_t i = pos; i < ikey.bytes_.size(); ++i) {
-    if (ikey.bytes_[i].dimension_ == Value) {
+    if (ikey.bytes_[i].dimension_ == Dimension::Value) {
       prefix_.push_back(ikey.bytes_[i].byte_);
     }
   }

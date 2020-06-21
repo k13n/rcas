@@ -14,20 +14,20 @@ TEST_CASE("Test LabelWise interleaving", "[cas::Interleaver]") {
     bkey.value_ = { 0x00, 0x01 };
 
     std::vector<cas::InterleavedByte> expected_key = {
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x61, .dimension_ = cas::Path  },
-      { .byte_ = 0x62, .dimension_ = cas::Path  },
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x00, .dimension_ = cas::Value },
-      { .byte_ = 0x63, .dimension_ = cas::Path  },
-      { .byte_ = 0x64, .dimension_ = cas::Path  },
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x01, .dimension_ = cas::Value },
-      { .byte_ = 0x65, .dimension_ = cas::Path  },
-      { .byte_ = 0x66, .dimension_ = cas::Path  },
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x67, .dimension_ = cas::Path  },
-      { .byte_ = 0x00, .dimension_ = cas::Path  },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x61, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x62, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x00, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x63, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x64, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x01, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x65, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x66, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x67, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x00, .dimension_ = cas::Dimension::Path  },
     };
 
     cas::InterleavedKey ikey = cas::Interleaver::LabelWise(bkey);
@@ -44,24 +44,24 @@ TEST_CASE("Test LabelWise interleaving", "[cas::Interleaver]") {
     bkey.value_ = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05 };
 
     std::vector<cas::InterleavedByte> expected_key = {
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x61, .dimension_ = cas::Path  },
-      { .byte_ = 0x62, .dimension_ = cas::Path  },
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x00, .dimension_ = cas::Value },
-      { .byte_ = 0x63, .dimension_ = cas::Path  },
-      { .byte_ = 0x64, .dimension_ = cas::Path  },
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x01, .dimension_ = cas::Value },
-      { .byte_ = 0x65, .dimension_ = cas::Path  },
-      { .byte_ = 0x66, .dimension_ = cas::Path  },
-      { .byte_ = 0xFF, .dimension_ = cas::Path  },
-      { .byte_ = 0x02, .dimension_ = cas::Value },
-      { .byte_ = 0x67, .dimension_ = cas::Path  },
-      { .byte_ = 0x00, .dimension_ = cas::Path  },
-      { .byte_ = 0x03, .dimension_ = cas::Value },
-      { .byte_ = 0x04, .dimension_ = cas::Value },
-      { .byte_ = 0x05, .dimension_ = cas::Value },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x61, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x62, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x00, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x63, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x64, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x01, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x65, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x66, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xFF, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x02, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x67, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x00, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x03, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x04, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x05, .dimension_ = cas::Dimension::Value },
     };
 
     cas::InterleavedKey ikey = cas::Interleaver::LabelWise(bkey);
@@ -76,14 +76,14 @@ TEST_CASE("Test PathValue interleaving", "[cas::Interleaver]") {
   bkey.value_ = { 0x00, 0x01 };
 
   std::vector<cas::InterleavedByte> expected_key = {
-    { .byte_ = 0x61, .dimension_ = cas::Path  },
-    { .byte_ = 0x62, .dimension_ = cas::Path  },
-    { .byte_ = 0x63, .dimension_ = cas::Path  },
-    { .byte_ = 0x64, .dimension_ = cas::Path  },
-    { .byte_ = 0x65, .dimension_ = cas::Path  },
-    { .byte_ = 0x00, .dimension_ = cas::Path  },
-    { .byte_ = 0x00, .dimension_ = cas::Value },
-    { .byte_ = 0x01, .dimension_ = cas::Value },
+    { .byte_ = 0x61, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x62, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x63, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x64, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x65, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x00, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x00, .dimension_ = cas::Dimension::Value },
+    { .byte_ = 0x01, .dimension_ = cas::Dimension::Value },
   };
 
   cas::InterleavedKey ikey = cas::Interleaver::PathValue(bkey);
@@ -98,14 +98,14 @@ TEST_CASE("Test ValuePath interleaving", "[cas::Interleaver]") {
   bkey.value_ = { 0x00, 0x01 };
 
   std::vector<cas::InterleavedByte> expected_key = {
-    { .byte_ = 0x00, .dimension_ = cas::Value },
-    { .byte_ = 0x01, .dimension_ = cas::Value },
-    { .byte_ = 0x61, .dimension_ = cas::Path  },
-    { .byte_ = 0x62, .dimension_ = cas::Path  },
-    { .byte_ = 0x63, .dimension_ = cas::Path  },
-    { .byte_ = 0x64, .dimension_ = cas::Path  },
-    { .byte_ = 0x65, .dimension_ = cas::Path  },
-    { .byte_ = 0x00, .dimension_ = cas::Path  },
+    { .byte_ = 0x00, .dimension_ = cas::Dimension::Value },
+    { .byte_ = 0x01, .dimension_ = cas::Dimension::Value },
+    { .byte_ = 0x61, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x62, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x63, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x64, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x65, .dimension_ = cas::Dimension::Path  },
+    { .byte_ = 0x00, .dimension_ = cas::Dimension::Path  },
   };
 
   cas::InterleavedKey ikey = cas::Interleaver::ValuePath(bkey);
@@ -122,14 +122,14 @@ TEST_CASE("Test ZOrder interleaving", "[cas::Interleaver]") {
     bkey.value_ = { 0xA1, 0xA2, 0xA3, 0xA4 };
 
     std::vector<cas::InterleavedByte> expected_key = {
-      { .byte_ = 0xA1, .dimension_ = cas::Value },
-      { .byte_ = 0x01, .dimension_ = cas::Path  },
-      { .byte_ = 0xA2, .dimension_ = cas::Value },
-      { .byte_ = 0x02, .dimension_ = cas::Path  },
-      { .byte_ = 0xA3, .dimension_ = cas::Value },
-      { .byte_ = 0x03, .dimension_ = cas::Path  },
-      { .byte_ = 0xA4, .dimension_ = cas::Value },
-      { .byte_ = 0x04, .dimension_ = cas::Path  },
+      { .byte_ = 0xA1, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x01, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA2, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x02, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA3, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x03, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA4, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x04, .dimension_ = cas::Dimension::Path  },
     };
 
     cas::InterleavedKey ikey = cas::Interleaver::ZOrder(bkey);
@@ -143,15 +143,15 @@ TEST_CASE("Test ZOrder interleaving", "[cas::Interleaver]") {
     bkey.value_ = { 0xA1, 0xA2, 0xA3, 0xA4 };
 
     std::vector<cas::InterleavedByte> expected_key = {
-      { .byte_ = 0xA1, .dimension_ = cas::Value },
-      { .byte_ = 0x01, .dimension_ = cas::Path  },
-      { .byte_ = 0x02, .dimension_ = cas::Path  },
-      { .byte_ = 0xA2, .dimension_ = cas::Value },
-      { .byte_ = 0x03, .dimension_ = cas::Path  },
-      { .byte_ = 0x04, .dimension_ = cas::Path  },
-      { .byte_ = 0xA3, .dimension_ = cas::Value },
-      { .byte_ = 0x05, .dimension_ = cas::Path  },
-      { .byte_ = 0xA4, .dimension_ = cas::Value },
+      { .byte_ = 0xA1, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x01, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x02, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA2, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x03, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x04, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA3, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x05, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA4, .dimension_ = cas::Dimension::Value },
     };
 
     cas::InterleavedKey ikey = cas::Interleaver::ZOrder(bkey);
@@ -165,19 +165,19 @@ TEST_CASE("Test ZOrder interleaving", "[cas::Interleaver]") {
     bkey.value_ = { 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8 };
 
     std::vector<cas::InterleavedByte> expected_key = {
-      { .byte_ = 0xA0, .dimension_ = cas::Value },
-      { .byte_ = 0xA1, .dimension_ = cas::Value },
-      { .byte_ = 0xA2, .dimension_ = cas::Value },
-      { .byte_ = 0x00, .dimension_ = cas::Path  },
-      { .byte_ = 0xA3, .dimension_ = cas::Value },
-      { .byte_ = 0xA4, .dimension_ = cas::Value },
-      { .byte_ = 0xA5, .dimension_ = cas::Value },
-      { .byte_ = 0x01, .dimension_ = cas::Path  },
-      { .byte_ = 0xA6, .dimension_ = cas::Value },
-      { .byte_ = 0xA7, .dimension_ = cas::Value },
-      { .byte_ = 0xA8, .dimension_ = cas::Value },
-      { .byte_ = 0x02, .dimension_ = cas::Path  },
-      { .byte_ = 0x03, .dimension_ = cas::Path  },
+      { .byte_ = 0xA0, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0xA1, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0xA2, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x00, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA3, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0xA4, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0xA5, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x01, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0xA6, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0xA7, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0xA8, .dimension_ = cas::Dimension::Value },
+      { .byte_ = 0x02, .dimension_ = cas::Dimension::Path  },
+      { .byte_ = 0x03, .dimension_ = cas::Dimension::Path  },
     };
 
     cas::InterleavedKey ikey = cas::Interleaver::ZOrder(bkey);

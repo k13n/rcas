@@ -56,14 +56,15 @@ cas::SurrogatePathMatcher::PrefixMatch cas::SurrogatePathMatcher::MatchPathIncre
       }
       ++s.desc_ppos_;
     } else {
-      return MISMATCH;
+      return PathMatcher::PrefixMatch::MISMATCH;
     }
   }
 
   // we need more input characters to determine the outcome
   if (s.ppos_ < surrogate_.NrBytes() && s.desc_ppos_ < surrogate_.NrBytes()) {
-    return INCOMPLETE;
+    return PathMatcher::PrefixMatch::INCOMPLETE;
   }
 
-  return (s.qpos_ == qpath.Size()) ? MATCH : MISMATCH;
+  return (s.qpos_ == qpath.Size()) ? PathMatcher::PrefixMatch::MATCH
+                                   : PathMatcher::PrefixMatch::MISMATCH;
 }

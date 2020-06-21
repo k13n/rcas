@@ -48,12 +48,12 @@ void cas::Query<VType>::Execute() {
     cas::PathMatcher::PrefixMatch match_pat = MatchPathPrefix(s);
     cas::PathMatcher::PrefixMatch match_val = MatchValuePrefix(s);
 
-    if (match_pat == PathMatcher::MATCH &&
-        match_val == PathMatcher::MATCH) {
+    if (match_pat == PathMatcher::PrefixMatch::MATCH &&
+        match_val == PathMatcher::PrefixMatch::MATCH) {
       assert(s.node_->IsLeaf());
       EmitMatch(s);
-    } else if (match_pat != PathMatcher::MISMATCH &&
-               match_val != PathMatcher::MISMATCH) {
+    } else if (match_pat != PathMatcher::PrefixMatch::MISMATCH &&
+               match_val != PathMatcher::PrefixMatch::MISMATCH) {
       assert(!s.node_->IsLeaf());
       Descend(s);
     }
@@ -136,16 +136,17 @@ cas::Query<VType>::MatchValuePrefix(State& s) {
   if (s.vl_pos_ < key_.low_.size() && s.vl_pos_ < s.len_val_ &&
       buf_val_[s.vl_pos_] < key_.low_[s.vl_pos_]) {
     // buf_val_ < key_.low_
-    return PathMatcher::MISMATCH;
+    return PathMatcher::PrefixMatch::MISMATCH;
   }
 
   if (s.vh_pos_ < key_.high_.size() && s.vh_pos_ < s.len_val_ &&
       buf_val_[s.vh_pos_] > key_.high_[s.vh_pos_]) {
     // buf_val_ > key_.high_
-    return PathMatcher::MISMATCH;
+    return PathMatcher::PrefixMatch::MISMATCH;
   }
 
-  return IsCompleteValue(s) ? PathMatcher::MATCH : PathMatcher::INCOMPLETE;
+  return IsCompleteValue(s) ? PathMatcher::PrefixMatch::MATCH
+                            : PathMatcher::PrefixMatch::INCOMPLETE;
 }
 
 

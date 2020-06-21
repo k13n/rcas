@@ -51,7 +51,22 @@ void cas::BinaryQP::Dump() const {
   std::cout << std::endl;
   std::cout << "PathTypes: ";
   for (const cas::ByteType& type : types_) {
-    std::cout << "   " << type << " ";
+    std::cout << "   ";
+    switch (type) {
+      case cas::ByteType::kTypeLabel:
+        std::cout << 0;
+        break;
+      case cas::ByteType::kTypePathSeperator:
+        std::cout << 1;
+        break;
+      case cas::ByteType::kTypeWildcard:
+        std::cout << 2;
+        break;
+      case cas::ByteType::kTypeDescendant:
+        std::cout << 3;
+        break;
+    }
+    std::cout << " ";
   }
   std::cout << std::endl;
 }

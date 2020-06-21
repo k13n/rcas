@@ -4,7 +4,7 @@
 namespace cas {
 
 
-enum IndexType {
+enum class IndexType {
   DynamicInterleaving,
   PathValue,
   ValuePath,

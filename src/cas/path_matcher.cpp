@@ -49,13 +49,13 @@ cas::PathMatcher::PrefixMatch cas::PathMatcher::MatchPathIncremental(
         ++s.desc_ppos_;
       }
     } else {
-      return MISMATCH;
+      return PrefixMatch::MISMATCH;
     }
   }
 
   // we need more input characters to determine the outcome
   if (s.ppos_ >= len_path || s.desc_ppos_ >= len_path) {
-    return INCOMPLETE;
+    return PrefixMatch::INCOMPLETE;
   }
 
   // we reached the end of a full path. now we can determine
@@ -75,7 +75,7 @@ cas::PathMatcher::PrefixMatch cas::PathMatcher::MatchPathIncremental(
     ++s.qpos_;
   }
 
-  return (s.qpos_ == query_path.size()) ? MATCH : MISMATCH;
+  return (s.qpos_ == query_path.size()) ? PrefixMatch::MATCH : PrefixMatch::MISMATCH;
 }
 
 
@@ -83,7 +83,7 @@ bool cas::PathMatcher::MatchPath(
     const std::vector<uint8_t>& path,
     const cas::BinaryQP& qpath) {
   State s;
-  return MatchPathIncremental(path, qpath, path.size(), s) == MATCH;
+  return MatchPathIncremental(path, qpath, path.size(), s) == PrefixMatch::MATCH;
 }
 
 
