@@ -13,14 +13,13 @@
 
 
 benchmark::ScalabilityExperiment::ScalabilityExperiment(
-      const std::vector<Dataset> datasets,
+      const std::vector<Dataset>& datasets,
       const char dataset_delim,
-      const std::vector<Approach> approaches)
+      const std::vector<Approach>& approaches)
   : datasets_(datasets)
   , dataset_delim_(dataset_delim)
   , approaches_(approaches)
-{
-}
+{ }
 
 
 void benchmark::ScalabilityExperiment::Run() {
@@ -48,7 +47,7 @@ void benchmark::ScalabilityExperiment::RunIndex(
 
 
 uint64_t benchmark::ScalabilityExperiment::PopulateIndex(
-    cas::Index<cas::vint32_t>& index, std::string filename) {
+    cas::Index<cas::vint32_t>& index, const std::string& filename) const {
   cas::CsvImporter<cas::vint32_t> importer(index, dataset_delim_);
   return importer.BulkLoad(filename);
 }
@@ -80,7 +79,7 @@ void benchmark::ScalabilityExperiment::PrintTableSpace() {
   for (size_t row = 0; row < datasets_.size(); ++row) {
     std::cout << datasets_[row].size_;
     for (size_t col = 0; col < approaches_.size(); ++col) {
-      int pos = row * approaches_.size() + col;
+      size_t pos = row * approaches_.size() + col;
       std::cout << "," << results_[pos].size_bytes_;
     }
     std::cout << std::endl;
@@ -97,9 +96,9 @@ void benchmark::ScalabilityExperiment::PrintTableSpacePerKey() {
   for (size_t row = 0; row < datasets_.size(); ++row) {
     std::cout << datasets_[row].size_;
     for (size_t col = 0; col < approaches_.size(); ++col) {
-      int pos = row * approaches_.size() + col;
+      size_t pos = row * approaches_.size() + col;
       size_t index_size = results_[pos].size_bytes_;
-      double bytes_per_key = index_size / (double) datasets_[row].size_;
+      double bytes_per_key = index_size / static_cast<double>(datasets_[row].size_);
       std::cout << "," << bytes_per_key;
     }
     std::cout << std::endl;
@@ -116,7 +115,7 @@ void benchmark::ScalabilityExperiment::PrintTableTime() {
   for (size_t row = 0; row < datasets_.size(); ++row) {
     std::cout << datasets_[row].size_;
     for (size_t col = 0; col < approaches_.size(); ++col) {
-      int pos = row * approaches_.size() + col;
+      size_t pos = row * approaches_.size() + col;
       double runtime_ms = load_times_[pos] / 1000.0;
       std::cout << "," << runtime_ms;
     }

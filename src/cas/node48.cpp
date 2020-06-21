@@ -5,7 +5,9 @@
 
 
 cas::Node48::Node48(cas::Dimension dimension)
-    : cas::Node(dimension) {
+    : cas::Node(dimension)
+    , indexes_{0}
+    , children_{nullptr} {
   memset(indexes_, kEmptyIndex, 256*sizeof(uint8_t));
   memset(children_, 0, 48*sizeof(uintptr_t));
 }
@@ -13,7 +15,7 @@ cas::Node48::Node48(cas::Dimension dimension)
 
 void cas::Node48::Put(uint8_t key_byte, Node* child) {
   if (nr_children_ >= 48) {
-    // TODO
+    // TODO(@kevin)
     exit(-1);
   }
   int pos = 0;
@@ -30,14 +32,13 @@ cas::Node* cas::Node48::LocateChild(uint8_t key_byte) {
   uint8_t index = indexes_[key_byte];
   if (index == cas::kEmptyIndex) {
     return nullptr;
-  } else {
-    return children_[index];
   }
+  return children_[index];
 }
 
 
 cas::Node* cas::Node48::Grow() {
-  cas::Node256* node256 = new cas::Node256(dimension_);
+  auto* node256 = new cas::Node256(dimension_);
   node256->nr_children_ = 48;
   node256->separator_pos_ = separator_pos_;
   node256->prefix_ = std::move(prefix_);
@@ -50,7 +51,7 @@ cas::Node* cas::Node48::Grow() {
 }
 
 
-bool cas::Node48::IsFull() {
+bool cas::Node48::IsFull() const {
   return nr_children_ >= 48;
 }
 
@@ -65,7 +66,7 @@ void cas::Node48::ReplaceBytePointer(uint8_t key_byte, cas::Node* child) {
 
 
 void cas::Node48::ForEachChild(uint8_t low, uint8_t high,
-                                 cas::ChildIt callback) {
+                               const cas::ChildIt& callback) {
   for (int i = high; i >= low; --i) {
     if (indexes_[i] != cas::kEmptyIndex) {
       callback(static_cast<uint8_t>(i), *children_[indexes_[i]]);
@@ -95,7 +96,7 @@ void cas::Node48::Dump() {
 void cas::Node48::DumpIndexes() {
   for (int i = 0; i < 256; ++i) {
     if (indexes_[i] != cas::kEmptyIndex) {
-      printf("0x%02X(%d)", i, indexes_[i]);
+      printf("0x%02X(%d)", i, indexes_[i]); // NOLINT
       if (i < 256-1) {
         std::cout << " ";
       }

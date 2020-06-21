@@ -21,7 +21,7 @@ TEST_CASE("Encoding ref in keys", "[cas::KeyEncoder]") {
 
 TEST_CASE("Encoding path in keys", "[cas::KeyEncoder]") {
   cas::Key<cas::vint64_t> key;
-  key.path_ = { "foo", "bar", "baz" };
+  key.path_ = "/foo/bar/baz";
 
   cas::KeyEncoder<cas::vint64_t> encoder;
   cas::BinaryKey bkey = encoder.Encode(key);

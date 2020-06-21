@@ -10,17 +10,17 @@ namespace cas {
 template<class VType>
 class CsvImporter {
   Index<VType>& index_;
-  ref_t highest_ref_;
   char delimiter_;
+  ref_t highest_ref_;
 
 public:
   CsvImporter(Index<VType>& index, char delimiter_ = ' ');
 
-  void Load(std::string filename);
+  void Load(const std::string& filename);
 
-  uint64_t BulkLoad(std::string filename);
+  uint64_t BulkLoad(const std::string& filename);
 
-  const cas::Key<VType> ProcessLine(const std::string& line);
+  cas::Key<VType> ProcessLine(const std::string& line);
 
 private:
   VType ParseValue(std::string& value);

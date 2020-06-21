@@ -12,16 +12,12 @@ namespace cas {
 
 template<class VType>
 struct Key {
-  /* Value */
+  std::string path_;
   VType value_;
-  /* Path */
-  path_t path_;
-  /* Reference  */
   ref_t ref_;
 
-  Key();
-
-  Key(VType value, path_t path, ref_t ref);
+  Key() = default;
+  Key(std::string path, VType value, ref_t ref);
 
   void Dump() const;
 };

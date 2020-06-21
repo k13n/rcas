@@ -23,11 +23,11 @@ private:
 public:
   SelectivityComputer(cas::Index<VType>& index);
 
-  void Compute(std::string query_path);
+  void Compute(const std::string& query_path);
 
   void Compute(VType low, VType high);
 
-  void Compute(std::string query_path, VType low, VType high);
+  void Compute(const std::string& query_path, VType low, VType high);
 
   void Compute(cas::SearchKey<VType>& key);
 

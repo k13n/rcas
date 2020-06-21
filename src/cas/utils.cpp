@@ -20,9 +20,9 @@ void cas::Utils::DumpHexValues(const std::vector<uint8_t>& buffer, size_t size) 
 void cas::Utils::DumpHexValues(const std::vector<uint8_t>& buffer,
     size_t offset, size_t size) {
   for (size_t i = offset; i < size && i < buffer.size(); ++i) {
-    printf("0x%02X", (unsigned char) buffer[i]);
+    printf("0x%02X", (unsigned char) buffer[i]); // NOLINT
     if (i < buffer.size()-1) {
-      printf(" ");
+      printf(" "); // NOLINT
     }
   }
 }
@@ -72,25 +72,6 @@ int cas::Utils::Memcmp(const void* lhs, size_t len_lhs, const void* rhs, size_t 
   }
   // one string is a prefix of the other. the shorter orders before the other
   return len_lhs < len_rhs ? -1 : 1;
-}
-
-
-void cas::Utils::DumpPath(const std::vector<std::string>& path, bool newline) {
-  for (auto& v : path) {
-    std::cout << "/" << v;
-  }
-  if (newline) {
-    std::cout << std::endl;
-  }
-}
-
-
-std::string cas::Utils::JoinPath(const std::vector<std::string>& path) {
-  std::stringstream result;
-  for (const auto& label : path) {
-    result << "/" << label;
-  }
-  return result.str();
 }
 
 

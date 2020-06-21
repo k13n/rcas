@@ -25,11 +25,6 @@ cas::SurrogateCas<VType>::SurrogateCas(cas::IndexType type,
 
 
 template<class VType>
-cas::SurrogateCas<VType>::~SurrogateCas() {
-}
-
-
-template<class VType>
 void cas::SurrogateCas<VType>::Insert(cas::Key<VType>& key) {
   cas::KeyEncoder<VType> encoder;
   BinaryKey bkey = encoder.Encode(key, surrogate_);
@@ -53,9 +48,9 @@ uint64_t cas::SurrogateCas<VType>::BulkLoad(
 
 
 template<class VType>
-const cas::QueryStats cas::SurrogateCas<VType>::Query(
+cas::QueryStats cas::SurrogateCas<VType>::Query(
     cas::SearchKey<VType>& key,
-    cas::BinaryKeyEmitter emitter) {
+    const cas::BinaryKeyEmitter& emitter) {
   cas::KeyEncoder<VType> encoder;
   cas::BinarySK bkey = encoder.Encode(key, surrogate_);
   cas::SurrogatePathMatcher pm(surrogate_);
@@ -66,9 +61,9 @@ const cas::QueryStats cas::SurrogateCas<VType>::Query(
 
 
 template<class VType>
-const cas::QueryStats cas::SurrogateCas<VType>::Query(
+cas::QueryStats cas::SurrogateCas<VType>::Query(
     cas::SearchKey<VType>& key,
-    cas::Emitter<VType> emitter) {
+    const cas::Emitter<VType>& emitter) {
   cas::KeyDecoder<VType> decoder;
   return Query(key, [&](
         const std::vector<uint8_t>& buffer_path,
@@ -80,7 +75,7 @@ const cas::QueryStats cas::SurrogateCas<VType>::Query(
 
 
 template<class VType>
-const cas::QueryStats cas::SurrogateCas<VType>::QueryRuntime(
+cas::QueryStats cas::SurrogateCas<VType>::QueryRuntime(
     cas::SearchKey<VType>& key) {
   return Query(key, [&](
         const std::vector<uint8_t>& /*buffer_path*/,
@@ -91,7 +86,7 @@ const cas::QueryStats cas::SurrogateCas<VType>::QueryRuntime(
 
 
 template<class VType>
-const cas::IndexStats cas::SurrogateCas<VType>::Stats() const {
+cas::IndexStats cas::SurrogateCas<VType>::Stats() const {
   return index_.Stats();
 }
 

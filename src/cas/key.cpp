@@ -4,27 +4,18 @@
 
 
 template<class VType>
-cas::Key<VType>::Key()
+cas::Key<VType>::Key(std::string path, VType value, ref_t ref)
+    : path_(std::move(path))
+    , value_(value)
+    , ref_(ref)
 {}
 
 
 template<class VType>
-cas::Key<VType>::Key(VType value, path_t path, ref_t ref) :
-    value_(value),
-    path_(path),
-    ref_(ref)
-{ }
-
-
-template<class VType>
 void cas::Key<VType>::Dump() const {
-  std::cout << "Value: " << value_ << std::endl;
-  std::cout << "Path: ";
-  for (auto& v : path_) {
-    std::cout << "/" << v;
-  }
-  std::cout << std::endl;
-  std::cout << "Ref: " << ref_ << std::endl;
+  std::cout <<   "Path:  " << path_;
+  std::cout << "\nValue: " << value_;
+  std::cout << "\nRef:   " << ref_;
 }
 
 

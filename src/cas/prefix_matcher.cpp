@@ -2,18 +2,18 @@
 #include <iostream>
 
 
-bool cas::PrefixMatcher::HasMismatch() {
+bool cas::PrefixMatcher::HasMismatch() const {
   return path_mismatch_ || value_mismatch_;
 }
 
 
-bool cas::PrefixMatcher::PrefixFullyMatched() {
+bool cas::PrefixMatcher::PrefixFullyMatched() const {
   return node_p_pos_ >= node_->separator_pos_ &&
          node_v_pos_ >= node_->prefix_.size();
 }
 
 
-bool cas::PrefixMatcher::KeyFullyMatched() {
+bool cas::PrefixMatcher::KeyFullyMatched() const {
   return bkey_p_pos_ >= bkey_->path_.size() &&
          bkey_v_pos_ >= bkey_->value_.size();
 }
@@ -57,7 +57,7 @@ void cas::PrefixMatcher::MatchValue() {
 }
 
 
-void cas::PrefixMatcher::Dump() {
+void cas::PrefixMatcher::Dump() const {
   std::cout << "bkey_p_pos_: " << bkey_p_pos_ << std::endl;
   std::cout << "bkey_v_pos_: " << bkey_v_pos_ << std::endl;
   std::cout << "node_p_pos_: " << node_p_pos_ << std::endl;

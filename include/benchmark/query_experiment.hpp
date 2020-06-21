@@ -13,17 +13,17 @@ namespace benchmark {
 template<class VType>
 class QueryExperiment {
 private:
-  const std::string dataset_filename_;
+  const std::string& dataset_filename_;
   const char dataset_delim_;
-  const std::vector<Approach> approaches_;
+  const std::vector<Approach>& approaches_;
   std::vector<cas::SearchKey<VType>> queries_;
   std::vector<cas::QueryStats> results_;
 
 public:
   QueryExperiment(
-      const std::string dataset_filename,
+      const std::string& dataset_filename,
       const char dataset_delim,
-      const std::vector<Approach> approaches,
+      const std::vector<Approach>& approaches,
       std::vector<cas::SearchKey<VType>> queries
   );
 

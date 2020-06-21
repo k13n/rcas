@@ -31,17 +31,16 @@ void cas::Locator::Locate() {
       bkey_v_pos = matcher_.bkey_v_pos_ + 1;
       break;
     case cas::Dimension::Leaf:
-      assert(false);
+      assert(false); // NOLINT
       break;
     }
     cas::Node* child = node_->LocateChild(next_byte);
     if (child == nullptr) {
       return;
-    } else {
-      parent_ = node_;
-      node_ = child;
-      parent_byte_ = next_byte;
     }
+    parent_ = node_;
+    node_ = child;
+    parent_byte_ = next_byte;
     matcher_.Match(node_, &bkey_, bkey_p_pos, bkey_v_pos);
   }
 }
@@ -57,7 +56,7 @@ void cas::Locator::Dump() {
     std::cout << "parent_:" << std::endl;
     parent_->Dump();
   }
-  printf("parent_byte_: 0x%02X\n", (unsigned char) parent_byte_);
+  printf("parent_byte_: 0x%02X\n", static_cast<unsigned char>(parent_byte_)); // NOLINT
   if (node_ == nullptr) {
     std::cout << "node_: nullptr" << std::endl;
   } else {

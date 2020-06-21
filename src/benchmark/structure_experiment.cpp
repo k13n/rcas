@@ -13,7 +13,7 @@
 
 template<class VType>
 benchmark::StructureExperiment<VType>::StructureExperiment(
-      const std::string dataset,
+      const std::string& dataset,
       const char dataset_delim)
   : dataset_(dataset)
   , dataset_delim_(dataset_delim)

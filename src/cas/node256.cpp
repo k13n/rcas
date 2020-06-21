@@ -4,7 +4,8 @@
 
 
 cas::Node256::Node256(cas::Dimension dimension)
-    : cas::Node(dimension) {
+    : cas::Node(dimension)
+    , children_{nullptr} {
   memset(children_, 0, 256*sizeof(uintptr_t));
 }
 
@@ -30,7 +31,7 @@ cas::Node* cas::Node256::Grow() {
 }
 
 
-bool cas::Node256::IsFull() {
+bool cas::Node256::IsFull() const {
   return nr_children_ >= 256;
 }
 
@@ -44,7 +45,7 @@ void cas::Node256::ReplaceBytePointer(uint8_t key_byte, cas::Node* child) {
 
 
 void cas::Node256::ForEachChild(uint8_t low, uint8_t high,
-                                  cas::ChildIt callback) {
+                                const cas::ChildIt& callback) {
   for (int i = high; i >= low; --i) {
     if (children_[i] != nullptr) {
       callback(static_cast<uint8_t>(i), *children_[i]);

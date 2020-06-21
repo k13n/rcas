@@ -18,7 +18,7 @@ cas::InterleavedKey cas::Interleaver::Interleave(const cas::BinaryKey& bkey,
   case cas::IndexType::ZOrder:
     return cas::Interleaver::ZOrder(bkey);
   default:
-    assert(false);
+    assert(false); // NOLINT
     exit(-1);
   }
 }
@@ -29,8 +29,8 @@ cas::InterleavedKey cas::Interleaver::ZOrder(const cas::BinaryKey& bkey) {
   ikey.bytes_.reserve(bkey.path_.size() + bkey.value_.size());
   ikey.ref_ = bkey.ref_;
 
-  int p_run_len = (int) std::ceil(bkey.path_.size()  / ((double) bkey.value_.size()));
-  int v_run_len = (int) std::ceil(bkey.value_.size() / ((double) bkey.path_.size()));
+  int p_run_len = static_cast<int>(std::ceil(bkey.path_.size()  / static_cast<double>(bkey.value_.size())));
+  int v_run_len = static_cast<int>(std::ceil(bkey.value_.size() / static_cast<double>(bkey.path_.size())));
   size_t p_pos = 0;
   size_t v_pos = 0;
 
@@ -93,11 +93,11 @@ cas::InterleavedKey cas::Interleaver::PathValue(const cas::BinaryKey& bkey) {
   cas::InterleavedKey ikey;
   ikey.bytes_.reserve(bkey.path_.size() + bkey.value_.size());
   ikey.ref_ = bkey.ref_;
-  for (size_t i = 0; i < bkey.path_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.path_[i], .dimension_ = Dimension::Path });
+  for (const auto& byte : bkey.path_) {
+    ikey.bytes_.push_back({ .byte_ = byte, .dimension_ = Dimension::Path });
   }
-  for (size_t i = 0; i < bkey.value_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.value_[i], .dimension_ = Dimension::Value });
+  for (const auto& byte : bkey.value_) {
+    ikey.bytes_.push_back({ .byte_ = byte, .dimension_ = Dimension::Value });
   }
   return ikey;
 }
@@ -107,11 +107,11 @@ cas::InterleavedKey cas::Interleaver::ValuePath(const cas::BinaryKey& bkey) {
   cas::InterleavedKey ikey;
   ikey.bytes_.reserve(bkey.path_.size() + bkey.value_.size());
   ikey.ref_ = bkey.ref_;
-  for (size_t i = 0; i < bkey.value_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.value_[i], .dimension_ = Dimension::Value });
+  for (const auto& byte : bkey.value_) {
+    ikey.bytes_.push_back({ .byte_ = byte, .dimension_ = Dimension::Value });
   }
-  for (size_t i = 0; i < bkey.path_.size(); ++i) {
-    ikey.bytes_.push_back({ .byte_ = bkey.path_[i], .dimension_ = Dimension::Path });
+  for (const auto& byte : bkey.path_) {
+    ikey.bytes_.push_back({ .byte_ = byte, .dimension_ = Dimension::Path });
   }
   return ikey;
 }

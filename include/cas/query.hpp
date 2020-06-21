@@ -35,7 +35,7 @@ class Query {
   Node* root_;
   BinarySK& key_;
   PathMatcher& pm_;
-  BinaryKeyEmitter emitter_;
+  const BinaryKeyEmitter& emitter_;
   std::vector<uint8_t> buf_pat_;
   std::vector<uint8_t> buf_val_;
   std::deque<State> stack_;
@@ -44,7 +44,7 @@ class Query {
 
 public:
   Query(Node* root, BinarySK& key, cas::PathMatcher& pm,
-      BinaryKeyEmitter emitter);
+      const BinaryKeyEmitter& emitter);
 
   void Execute();
 

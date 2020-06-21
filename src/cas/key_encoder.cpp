@@ -32,12 +32,7 @@ cas::BinaryKey cas::KeyEncoder<VType>::Encode(
 template<class VType>
 void
 cas::KeyEncoder<VType>::ReserveSpace(const cas::Key<VType>& key, BinaryKey& bkey) {
-  size_t path_size = 0;
-  for (const auto& label : key.path_) {
-    path_size += 1; // for the path separator
-    path_size += label.size();
-  }
-  path_size += 1; // for trailing null byte
+  size_t path_size = key.path_.size() + 1; // for trailing null byte;
   size_t value_size = ValueSize(key.value_);
   bkey.path_  = std::vector<uint8_t>(path_size);
   bkey.value_ = std::vector<uint8_t>(value_size);
@@ -48,11 +43,14 @@ template<class VType>
 void
 cas::KeyEncoder<VType>::EncodePath(const cas::Key<VType>& key, BinaryKey& bkey) {
   int offset = 0;
-  for (auto& label : key.path_) {
-    bkey.path_[offset++] = cas::kPathSep;
-    MemCpyToBuffer(bkey.path_, offset, label.data(), label.size());
-  }
+  MemCpyToBuffer(bkey.path_, offset, key.path_.data(), key.path_.size());
   bkey.path_[offset++] = cas::kNullByte;
+  for (int i = 0; i < offset; ++i) {
+    static const uint8_t pathSep = 0x2F;
+    if (bkey.path_[i] == pathSep) {
+      bkey.path_[i] = static_cast<uint8_t>(cas::PathMask::PathSeperator);
+    }
+  }
 }
 
 
@@ -70,7 +68,7 @@ cas::KeyEncoder<cas::vint32_t>::EncodeValue(
     const cas::Key<cas::vint32_t>& key,
     BinaryKey& bkey) {
   int offset = 0;
-  cas::vint32_t complement = key.value_ ^ cas::kMsbMask32;
+  cas::vint32_t complement = static_cast<uint32_t>(key.value_) ^ cas::kMsbMask32;
   complement = __builtin_bswap32(complement);
   MemCpyToBuffer(bkey.value_, offset, &complement, sizeof(cas::vint32_t));
 }
@@ -82,7 +80,7 @@ cas::KeyEncoder<cas::vint64_t>::EncodeValue(
     const cas::Key<cas::vint64_t>& key,
     BinaryKey& bkey) {
   int offset = 0;
-  cas::vint64_t complement = key.value_ ^ cas::kMsbMask64;
+  cas::vint64_t complement = static_cast<uint64_t>(key.value_) ^ cas::kMsbMask64;
   complement = __builtin_bswap64(complement);
   MemCpyToBuffer(bkey.value_, offset, &complement, sizeof(cas::vint64_t));
 }
@@ -147,7 +145,7 @@ cas::KeyEncoder<cas::vint32_t>::EncodeValue(
     const cas::vint32_t& value,
     std::vector<uint8_t>& buffer) {
   int offset = 0;
-  cas::vint32_t complement = value ^ cas::kMsbMask32;
+  cas::vint32_t complement = static_cast<uint32_t>(value) ^ cas::kMsbMask32;
   complement = __builtin_bswap32(complement);
   MemCpyToBuffer(buffer, offset, &complement, sizeof(cas::vint32_t));
 }
@@ -159,7 +157,7 @@ cas::KeyEncoder<cas::vint64_t>::EncodeValue(
     const cas::vint64_t& value,
     std::vector<uint8_t>& buffer) {
   int offset = 0;
-  cas::vint64_t complement = value ^ cas::kMsbMask64;
+  cas::vint64_t complement = static_cast<uint64_t>(value) ^ cas::kMsbMask64;
   complement = __builtin_bswap64(complement);
   MemCpyToBuffer(buffer, offset, &complement, sizeof(cas::vint64_t));
 }
@@ -200,14 +198,14 @@ void cas::KeyEncoder<VType>::EncodeQueryPath(
     cas::SearchKey<VType>& key,
     cas::BinarySK& skey,
     cas::Surrogate& surrogate) {
-  std::string label_buffer = "";
+  std::string label_buffer;
   auto flush = [&]() -> void {
     if (label_buffer.empty()) {
       return;
     }
     std::vector<uint8_t> label = surrogate.MapLabel(label_buffer);
-    for (size_t i = 0; i < label.size(); ++i) {
-      skey.path_.push_back(label[i]);
+    for (const auto& letter : label) {
+      skey.path_.push_back(letter);
       skey.mask_.push_back(cas::PathMask::Label);
     }
     label_buffer = "";

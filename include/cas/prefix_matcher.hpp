@@ -23,13 +23,13 @@ public:
       size_t bkey_p_pos,
       size_t bkey_v_pos);
 
-  bool HasMismatch();
+  bool HasMismatch() const;
 
-  bool PrefixFullyMatched();
+  bool PrefixFullyMatched() const;
 
-  bool KeyFullyMatched();
+  bool KeyFullyMatched() const;
 
-  void Dump();
+  void Dump() const;
 
 private:
   void MatchValue();

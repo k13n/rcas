@@ -21,7 +21,7 @@ public:
 
   std::vector<uint8_t> MapLabel(const std::string& label);
 
-  std::vector<uint8_t> MapPath(const std::vector<std::string>& path);
+  std::vector<uint8_t> MapPath(const std::string& path);
 
   std::string MapLabelInv(const std::vector<uint8_t>& bytes);
 

@@ -8,12 +8,7 @@
 #include <functional>
 
 
-static std::string IRRELEVANT = "irrelevant";
-
-
-template<class VType>
-casxml::CasXml<VType>::~CasXml() {
-}
+const cas::vint32_t IRRELEVANT = 0;
 
 
 template<class VType>
@@ -40,14 +35,14 @@ void casxml::CasXml<VType>::Insert(cas::Key<VType>& key) {
 
 template<class VType>
 uint64_t casxml::CasXml<VType>::ComputePcr(cas::Key<VType>& key) {
-  cas::SearchKey<cas::vstring_t> dg_key;
+  cas::SearchKey<cas::vint32_t> dg_key;
   dg_key.low_  = IRRELEVANT;
   dg_key.high_ = IRRELEVANT;
-  dg_key.path_ = { cas::Utils::JoinPath(key.path_) };
+  dg_key.path_ = key.path_;
 
   bool found = false;
   uint64_t pcr = 0;
-  data_guide_.Query(dg_key, [&](const cas::Key<cas::vstring_t>& match) -> void {
+  data_guide_.Query(dg_key, [&](const cas::Key<cas::vint32_t>& match) -> void {
     pcr = match.ref_;
     found = true;
   });
@@ -57,7 +52,7 @@ uint64_t casxml::CasXml<VType>::ComputePcr(cas::Key<VType>& key) {
   }
 
   ++max_pcr_;
-  cas::Key<cas::vstring_t> pcrkey;
+  cas::Key<cas::vint32_t> pcrkey;
   pcrkey.value_ = IRRELEVANT;
   pcrkey.path_ = key.path_;
   pcrkey.ref_ = max_pcr_;
@@ -78,8 +73,8 @@ void casxml::CasXml<VType>::Delete(cas::Key<VType>& key) {
 
 
 template<class VType>
-const cas::QueryStats casxml::CasXml<VType>::Query(cas::SearchKey<VType>& key,
-    bool decode, cas::Emitter<VType> emitter) {
+cas::QueryStats casxml::CasXml<VType>::Query(cas::SearchKey<VType>& key,
+    bool decode, const cas::Emitter<VType>& emitter) {
   cas::QueryStats stats;
   const auto& t_start = std::chrono::high_resolution_clock::now();
   auto pcrs = QueryDataGuide(key, stats, decode);
@@ -110,27 +105,27 @@ const cas::QueryStats casxml::CasXml<VType>::Query(cas::SearchKey<VType>& key,
 
 
 template<class VType>
-const cas::QueryStats casxml::CasXml<VType>::Query(cas::SearchKey<VType>& key,
-    cas::Emitter<VType> emitter) {
+cas::QueryStats casxml::CasXml<VType>::Query(cas::SearchKey<VType>& key,
+    const cas::Emitter<VType>& emitter) {
   return Query(key, true, emitter);
 }
 
 
 template<class VType>
-const cas::QueryStats casxml::CasXml<VType>::QueryRuntime(
+cas::QueryStats casxml::CasXml<VType>::QueryRuntime(
     cas::SearchKey<VType>& skey) {
-  return Query(skey, false, [](const cas::Key<VType>&) -> void {});
+  return Query(skey, false, [](const cas::Key<VType>& /* key */) -> void {});
 }
 
 
 template<class VType>
-const typename casxml::CasXml<VType>::pcr_map
+typename casxml::CasXml<VType>::pcr_map
 casxml::CasXml<VType>::QueryDataGuide(cas::SearchKey<VType>& key,
     cas::QueryStats& stats, bool decode) {
   const auto& t_path_start = std::chrono::high_resolution_clock::now();
   casxml::CasXml<VType>::pcr_map map;
 
-  cas::SearchKey<cas::vstring_t> skey;
+  cas::SearchKey<cas::vint32_t> skey;
   skey.low_  = IRRELEVANT;
   skey.high_ = IRRELEVANT;
   skey.path_ = key.path_;
@@ -138,7 +133,7 @@ casxml::CasXml<VType>::QueryDataGuide(cas::SearchKey<VType>& key,
   cas::QueryStats dg_stats;
   if (decode) {
     dg_stats = data_guide_.Query(skey,
-        [&](const cas::Key<cas::vstring_t>& match) -> void {
+        [&](const cas::Key<cas::vint32_t>& match) -> void {
       map[match.ref_] = match.path_;
     });
   } else {
@@ -183,7 +178,7 @@ void casxml::CasXml<VType>::Describe() const {
 
 
 template<class VType>
-const cas::IndexStats casxml::CasXml<VType>::Stats() const {
+cas::IndexStats casxml::CasXml<VType>::Stats() const {
   cas::IndexStats stats = data_guide_.Stats();
   size_t btree_size = casxml::btree_memory_used.load();
   stats.size_bytes_ += btree_size;
@@ -193,7 +188,7 @@ const cas::IndexStats casxml::CasXml<VType>::Stats() const {
 
 template<class VType>
 size_t casxml::CasXml<VType>::NrKeys() const {
-  // TODO: store number of keys
+  // TODO(@kevin): store number of keys
   return 0;
 }
 

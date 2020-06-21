@@ -14,7 +14,7 @@ benchmark::SelectivityComputer<VType>::SelectivityComputer(cas::Index<VType>& in
 
 template<class VType>
 void benchmark::SelectivityComputer<VType>::Compute(
-    std::string query_path) {
+    const std::string& query_path) {
   cas::SearchKey<VType> skey;
   skey.path_ = { query_path };
   SetAllValues(skey);
@@ -26,7 +26,7 @@ template<class VType>
 void benchmark::SelectivityComputer<VType>::Compute(
     VType low, VType high) {
   cas::SearchKey<VType> skey;
-  skey.path_ = { "^" };
+  skey.path_ = "^";
   skey.low_  = low;
   skey.high_ = high;
   Compute(skey);
@@ -35,10 +35,10 @@ void benchmark::SelectivityComputer<VType>::Compute(
 
 template<class VType>
 void benchmark::SelectivityComputer<VType>::Compute(
-    std::string query_path,
+    const std::string& query_path,
     VType low, VType high) {
   cas::SearchKey<VType> skey;
-  skey.path_ = { query_path };
+  skey.path_ = query_path;
   skey.low_  = low;
   skey.high_ = high;
   Compute(skey);
@@ -103,7 +103,7 @@ void benchmark::SelectivityComputer<VType>::Selectivity(
 template<class VType>
 void benchmark::SelectivityComputer<VType>::SetAllPaths(
     cas::SearchKey<VType>& skey) {
-  skey.path_ = { "^" };
+  skey.path_ = "^";
 }
 
 

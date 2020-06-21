@@ -1,7 +1,7 @@
 #include "benchmark/benchmarks.hpp"
 
 
-int main(int argc, char** argv) {
+int main_(int argc, char** argv) {
   std::string dataset_folder = "/storage/";
   if (argc >= 2) {
     dataset_folder = argv[1];
@@ -34,4 +34,17 @@ int main(int argc, char** argv) {
   bm.Run();
 
   return 0;
+}
+
+
+int main(int argc, char** argv) {
+  try {
+    return main_(argc, argv);
+  } catch (std::exception& e) {
+    std::cerr << "Standard exception. What: " << e.what() << "\n";
+    return 10;
+  } catch (...) {
+    std::cerr << "Unknown exception.\n";
+    return 11;
+  }
 }

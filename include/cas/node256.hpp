@@ -12,7 +12,7 @@ public:
 
   Node256(Dimension dimension);
 
-  bool IsFull() override;
+  bool IsFull() const override;
 
   void Put(uint8_t key_byte, Node* child) override;
 
@@ -22,7 +22,7 @@ public:
 
   void ReplaceBytePointer(uint8_t key_byte, Node* child) override;
 
-  void ForEachChild(uint8_t low, uint8_t high, ChildIt callback) override;
+  void ForEachChild(uint8_t low, uint8_t high, const ChildIt& callback) override;
 
   size_t SizeBytes() override;
 

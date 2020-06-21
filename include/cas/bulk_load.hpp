@@ -41,7 +41,7 @@ private:
       const std::vector<size_t>& indexes,
       cas::Dimension dimension, size_t disc_byte);
 
-  void BuildPrefix(
+  static void BuildPrefix(
       cas::Node* node,
       cas::BinaryKey& key,
       size_t dp, size_t dv,

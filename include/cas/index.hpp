@@ -30,21 +30,26 @@ class Index {
 public:
   Index() {}
 
-  virtual ~Index();
+  virtual ~Index() = default;
+
+  Index(const Index<VType>& other) = delete;
+  Index(const Index<VType>&& other) = delete;
+  Index<VType>& operator=(const Index<VType>& other) = delete;
+  Index<VType>& operator=(Index<VType>&& other) = delete;
 
   virtual void Insert(Key<VType>& key) = 0;
 
   virtual uint64_t BulkLoad(std::deque<Key<VType>>& keys) = 0;
 
-  virtual const QueryStats Query(SearchKey<VType>& key,
-      Emitter<VType> emitter) = 0;
+  virtual QueryStats Query(SearchKey<VType>& key,
+      const Emitter<VType>& emitter) = 0;
 
-  virtual const QueryStats QueryRuntime(
+  virtual QueryStats QueryRuntime(
       SearchKey<VType>& key) = 0;
 
-  const QueryStats QueryVerbose(SearchKey<VType>& key);
+  QueryStats QueryVerbose(SearchKey<VType>& key);
 
-  virtual const IndexStats Stats() const = 0;
+  virtual IndexStats Stats() const = 0;
 
   virtual size_t NrKeys() const = 0;
 

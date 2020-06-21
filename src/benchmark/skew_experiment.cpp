@@ -14,9 +14,9 @@
 
 template<class VType>
 benchmark::SkewExperiment<VType>::SkewExperiment(
-      const std::string query_path,
-      const std::vector<Approach> approaches,
-      const std::vector<Dataset> datasets,
+      const std::string& query_path,
+      const std::vector<Approach>& approaches,
+      const std::vector<Dataset>& datasets,
       const char dataset_delim)
   : query_path_(query_path)
   , approaches_(approaches)

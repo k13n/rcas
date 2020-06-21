@@ -17,23 +17,23 @@ public:
   };
 
 private:
-  const std::vector<Dataset> datasets_;
+  const std::vector<Dataset>& datasets_;
   const char dataset_delim_;
-  std::vector<Approach> approaches_;
+  const std::vector<Approach>& approaches_;
   std::vector<cas::IndexStats> results_;
   std::vector<uint64_t> load_times_;
 
 public:
   ScalabilityExperiment(
-      const std::vector<Dataset> datasets,
+      const std::vector<Dataset>& datasets,
       const char dataset_delim,
-      const std::vector<Approach> approaches);
+      const std::vector<Approach>& approaches);
 
   void Run();
 
   void RunIndex(cas::Index<cas::vint32_t>& index, const Dataset& dataset);
 
-  uint64_t PopulateIndex(cas::Index<cas::vint32_t>& index, std::string filename);
+  uint64_t PopulateIndex(cas::Index<cas::vint32_t>& index, const std::string& filename) const;
 
   void PrintOutput();
 

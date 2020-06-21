@@ -6,36 +6,33 @@
 
 template<class VType>
 void cas::SearchKey<VType>::Dump() const {
-  std::cout << "SearchKey" << std::endl;
-  std::cout << "Low:  " << low_ << std::endl;
-  std::cout << "High: " << high_ << std::endl;
-  std::cout << "QueryPath: ";
-  for (auto& v : path_) {
-    std::cout << "/" << v;
-  }
-  std::cout << std::endl;
+  std::cout << "SearchKey";
+  std::cout << "\nPath: " << path_;
+  std::cout << "\nLow:  " << low_;
+  std::cout << "\nHigh: " << high_;
+  std::cout << "\n";
 }
 
 
 template<class VType>
 void cas::SearchKey<VType>::DumpConcise() const {
   std::cout << "Q(";
-  std::cout << path_[0];
+  std::cout << path_;
   std::cout << ", " << low_;
   std::cout << ", " << high_;
-  std::cout << ")";
-  std::cout << std::endl;
+  std::cout << ")\n";
 }
 
 
 void cas::BinarySK::Dump() const {
-  std::cout << "SearchKey(Binary)" << std::endl;
-  std::cout << "Path: ";
+  std::cout << "SearchKey(Binary)";
+  std::cout << "\nPath: ";
   Utils::DumpHexValues(path_);
   std::cout << "\nLow:  ";
   Utils::DumpHexValues(low_);
   std::cout << "\nHigh: ";
   Utils::DumpHexValues(high_);
+  std::cout << "\n";
 }
 
 

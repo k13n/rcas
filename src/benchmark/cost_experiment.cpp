@@ -15,9 +15,9 @@
 
 template<class VType>
 benchmark::CostExperiment<VType>::CostExperiment(
-      const std::string dataset_filename,
+      const std::string& dataset_filename,
       const char dataset_delim,
-      const std::vector<Approach> approaches,
+      const std::vector<Approach>& approaches,
       std::vector<cas::SearchKey<VType>> queries)
   : dataset_filename_(dataset_filename)
   , dataset_delim_(dataset_delim)
@@ -58,6 +58,7 @@ void benchmark::CostExperiment<VType>::RunIndex(
 
   for (auto& skey : queries_) {
     std::vector<cas::QueryStats> stats;
+    stats.reserve(nr_repetitions);
     for (int i = 0; i < nr_repetitions; ++i) {
       stats.push_back(index.QueryRuntime(skey));
     }

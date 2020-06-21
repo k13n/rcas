@@ -35,10 +35,6 @@ public:
    */
   static int Memcmp(const void* lhs, size_t len_lhs, const void* rhs, size_t len_rhs);
 
-  static void DumpPath(const std::vector<std::string>& path, bool newline = true);
-
-  static std::string JoinPath(const std::vector<std::string>& path);
-
   template<class VType>
   static std::string TypeToString();
 };

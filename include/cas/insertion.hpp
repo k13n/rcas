@@ -27,7 +27,7 @@ private:
 
   void AddNewLeaf();
 
-  bool AddRefToExistingLeaf();
+  bool AddRefToExistingLeaf() const;
 
   cas::Node* Restructure();
 

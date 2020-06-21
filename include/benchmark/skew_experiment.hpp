@@ -21,17 +21,17 @@ public:
   };
 
 private:
-  const std::string query_path_;
-  const std::vector<Approach> approaches_;
-  const std::vector<Dataset> datasets_;
+  const std::string& query_path_;
+  const std::vector<Approach>& approaches_;
+  const std::vector<Dataset>& datasets_;
   const char dataset_delim_;
   std::vector<cas::QueryStats> results_;
 
 public:
   SkewExperiment(
-      const std::string query_path,
-      const std::vector<Approach> approaches,
-      const std::vector<Dataset> datasets,
+      const std::string& query_path,
+      const std::vector<Approach>& approaches,
+      const std::vector<Dataset>& datasets,
       const char dataset_delim);
 
   void Run();

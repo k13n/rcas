@@ -34,7 +34,7 @@ cas::Node* cas::BulkLoad::Construct(
 
   if (dp_new == DoesNotExist && dv_new == DoesNotExist) {
     // we reached a leaf node
-    cas::Node0* leaf = new Node0();
+    auto* leaf = new Node0();
     BuildPrefix(leaf, some_key, dp, dv, dp_new, dv_new);
     leaf->refs_.reserve(indexes.size());
     for (size_t index : indexes) {
@@ -53,7 +53,7 @@ cas::Node* cas::BulkLoad::Construct(
   auto partitions = Partition(indexes, dimension,
       dimension == cas::Dimension::Path ? dp_new : dv_new);
 
-  cas::Node* node;
+  cas::Node* node = nullptr;
   if (partitions.size() <= 4) {
     node = new Node4(dimension);
   } else if (partitions.size() <= 16) {
@@ -66,7 +66,7 @@ cas::Node* cas::BulkLoad::Construct(
   BuildPrefix(node, some_key, dp, dv, dp_new, dv_new);
 
   for (const auto& it : partitions) {
-    cas::Node* child;
+    cas::Node* child = nullptr;
     if (dimension == cas::Dimension::Path) {
       child = Construct(it.second, dp_new+1, dv_new, cas::Dimension::Value);
     } else {

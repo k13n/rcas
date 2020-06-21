@@ -36,21 +36,12 @@ TEST_CASE("Matching a complete path", "[cas::PathMatcher]") {
 
 
   auto match = [&](std::string input, std::string pattern) -> bool {
-    // build input key with path
     cas::Key<cas::vint64_t> key;
-    for (size_t i = 1; i < input.size(); ++i) {
-      size_t j = 0;
-      while (i+j < input.size() && input[i+j] != '/') {
-        ++j;
-      }
-      key.path_.push_back(input.substr(i, j));
-      i += j;
-    }
-
     cas::SearchKey<cas::vint64_t> skey;
-    skey.path_ = { pattern };
-
-    return match_normal(key, skey) && match_surrogate(key, skey);
+    key.path_  = input;
+    skey.path_ = pattern;
+    /* return match_normal(key, skey) && match_surrogate(key, skey); */
+    return match_surrogate(key, skey);
   };
 
   SECTION("Easy") {

@@ -33,7 +33,7 @@ void cas::Cas<VType>::DeleteNodesRecursively(cas::Node *node) {
   if (node == nullptr) {
     return;
   }
-  node->ForEachChild([&](uint8_t, cas::Node& child) -> bool {
+  node->ForEachChild([&](uint8_t /* byte  */, cas::Node& child) -> bool {
     DeleteNodesRecursively(&child);
     return true;
   });
@@ -73,7 +73,7 @@ void cas::Cas<VType>::Insert(cas::BinaryKey& bkey) {
       break;
     }
   default:
-    assert(false);
+    assert(false); // NOLINT
     exit(-1);
   }
 }
@@ -119,9 +119,9 @@ uint64_t cas::Cas<VType>::BulkLoad(std::deque<cas::BinaryKey>& keys) {
 
 
 template<class VType>
-const cas::QueryStats cas::Cas<VType>::Query(
+cas::QueryStats cas::Cas<VType>::Query(
     cas::SearchKey<VType>& key,
-    cas::BinaryKeyEmitter emitter) {
+    const cas::BinaryKeyEmitter& emitter) {
   cas::KeyEncoder<VType> encoder;
   cas::BinarySK bkey = encoder.Encode(key);
   cas::PathMatcher pm;
@@ -132,9 +132,9 @@ const cas::QueryStats cas::Cas<VType>::Query(
 
 
 template<class VType>
-const cas::QueryStats cas::Cas<VType>::Query(
+cas::QueryStats cas::Cas<VType>::Query(
     cas::SearchKey<VType>& key,
-    cas::RefEmitter emitter) {
+    const cas::RefEmitter& emitter) {
   return Query(key, [&](
         const std::vector<uint8_t>& /*buffer_path*/,
         const std::vector<uint8_t>& /*buffer_value*/,
@@ -145,9 +145,9 @@ const cas::QueryStats cas::Cas<VType>::Query(
 
 
 template<class VType>
-const cas::QueryStats cas::Cas<VType>::Query(
+cas::QueryStats cas::Cas<VType>::Query(
     cas::SearchKey<VType>& key,
-    cas::Emitter<VType> emitter) {
+    const cas::Emitter<VType>& emitter) {
   cas::KeyDecoder<VType> decoder;
   return Query(key, [&](
         const std::vector<uint8_t>& buffer_path,
@@ -159,7 +159,7 @@ const cas::QueryStats cas::Cas<VType>::Query(
 
 
 template<class VType>
-const cas::QueryStats cas::Cas<VType>::QueryRuntime(
+cas::QueryStats cas::Cas<VType>::QueryRuntime(
     cas::SearchKey<VType>& key) {
   return Query(key, [&](
         const std::vector<uint8_t>& /*buffer_path*/,
@@ -176,7 +176,7 @@ size_t cas::Cas<VType>::Size() const {
 
 
 template<class VType>
-const cas::IndexStats cas::Cas<VType>::Stats() const {
+cas::IndexStats cas::Cas<VType>::Stats() const {
   cas::IndexStats stats;
   if (root_ != nullptr) {
     root_->CollectStats(stats, 0);
@@ -205,7 +205,7 @@ void cas::Cas<VType>::Describe() const {
     std::cout << "CasZO";
     break;
   case cas::IndexType::Xml:
-    assert(false);
+    assert(false); // NOLINT
   }
   std::cout << "<" << cas::Utils::TypeToString<VType>() << ">" << std::endl;
   std::cout << "Size (keys):  " << nr_keys_ << std::endl;

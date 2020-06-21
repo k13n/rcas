@@ -22,7 +22,9 @@ bool cas::InsertionStatic::Execute() {
   Descend();
   if (KeyFullyMatched()) {
     return AddRefToExistingLeaf();
-  } else if (NodePrefixMismatch()) {
+  }
+
+  if (NodePrefixMismatch()) {
     cas::Node* new_intermediate = SplitNode();
     if (parent_ == nullptr) {
       *root_ = new_intermediate;
@@ -30,16 +32,16 @@ bool cas::InsertionStatic::Execute() {
       parent_->ReplaceBytePointer(parent_byte_, new_intermediate);
     }
     return true;
-  } else if (!node_->IsLeaf()) {
+  }
+
+  if (!node_->IsLeaf()) {
     // an inner node must be extended with a new child
     AddNewLeaf();
     return true;
-  } else {
-    // ikey_ is a prefix of an existing key
-    return false;
   }
 
-  return true;
+  // ikey_ is a prefix of an existing key
+  return false;
 }
 
 
@@ -88,7 +90,7 @@ void cas::InsertionStatic::MatchPrefix() {
       }
       break;
     default:
-      assert(false);
+      assert(false); // NOLINT
     }
     ++ikey_pos_;
   }
@@ -99,8 +101,8 @@ bool cas::InsertionStatic::AddRefToExistingLeaf() {
   if (!node_->IsLeaf()) {
     return false;
   }
-  cas::Node0* leaf = static_cast<cas::Node0*>(node_);
-  // TODO: what if ref_ appears multiple times?
+  auto* leaf = dynamic_cast<cas::Node0*>(node_);
+  // TODO(@kevin): what if ref_ appears multiple times?
   leaf->refs_.push_back(ikey_.ref_);
   return true;
 }
@@ -111,7 +113,7 @@ cas::Node* cas::InsertionStatic::SplitNode() {
   switch (ikey_.bytes_[ikey_pos_].dimension_) {
     case cas::Dimension::Path:  return SplitNodeByPath();
     case cas::Dimension::Value: return SplitNodeByValue();
-    default: assert(false);
+    default: assert(false); // NOLINT
   }
   return nullptr;
 }

@@ -30,13 +30,10 @@ public:
     return false;
   };
 
-  bool IsPathNode();
-
-  bool IsValueNode();
-
-  Dimension Type();
-
-  virtual bool IsFull() = 0;
+  bool IsPathNode() const;
+  bool IsValueNode() const;
+  Dimension Type() const;
+  virtual bool IsFull() const = 0;
 
   /**
    * Assumes key_byte is not yet present in node
@@ -49,11 +46,11 @@ public:
 
   virtual void ReplaceBytePointer(uint8_t key_byte, Node* child) = 0;
 
-  virtual void ForEachChild(uint8_t low, uint8_t high, ChildIt callback) = 0;
+  virtual void ForEachChild(uint8_t low, uint8_t high, const ChildIt& callback) = 0;
 
-  virtual void ForEachChild(uint8_t low, ChildIt callback);
+  virtual void ForEachChild(uint8_t low, const ChildIt& callback);
 
-  virtual void ForEachChild(ChildIt callback);
+  virtual void ForEachChild(const ChildIt& callback);
 
   virtual size_t SizeBytes() = 0;
 
@@ -67,14 +64,14 @@ public:
 
   virtual int NodeWidth() = 0;
 
-  size_t PathPrefixSize();
+  size_t PathPrefixSize() const;
 
-  size_t ValuePrefixSize();
+  size_t ValuePrefixSize() const;
 
 protected:
-  void DumpBuffer(uint8_t *buffer, size_t length);
+  static void DumpBuffer(uint8_t *buffer, size_t length);
 
-  void DumpAddresses(Node **buffer, size_t length);
+  static void DumpAddresses(Node **buffer, size_t length);
 
 };
 

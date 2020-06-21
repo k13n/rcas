@@ -23,7 +23,7 @@ public:
     uint16_t desc_ppos_ = 0;
     int16_t  desc_qpos_ = -1;
 
-    void Dump();
+    void Dump() const;
   };
 
 

@@ -10,7 +10,6 @@
 namespace cas {
 
 using ref_t = uint64_t;
-using path_t = std::vector<std::string>;
 
 // value types
 using vint32_t = int32_t;

@@ -5,7 +5,9 @@
 
 
 cas::Node4::Node4(cas::Dimension dimension)
-    : cas::Node(dimension) {
+    : cas::Node(dimension)
+    , keys_{0}
+    , children_{nullptr} {
   memset(keys_, 0, 4*sizeof(uint8_t));
   memset(children_, 0, 4*sizeof(uintptr_t));
 }
@@ -13,7 +15,7 @@ cas::Node4::Node4(cas::Dimension dimension)
 
 void cas::Node4::Put(uint8_t key_byte, Node* child) {
   if (nr_children_ >= 4) {
-    // TODO
+    // TODO(@kevin)
     exit(-1);
   }
   int pos = 0;
@@ -61,7 +63,7 @@ void cas::Node4::ReplaceBytePointer(uint8_t key_byte, cas::Node* child) {
 
 
 void cas::Node4::ForEachChild(uint8_t low, uint8_t high,
-                                cas::ChildIt callback) {
+                              const cas::ChildIt& callback) {
   for (int i = nr_children_-1; i >= 0 && keys_[i] >= low; --i) {
     if (keys_[i] <= high) {
       callback(keys_[i], *children_[i]);
@@ -70,7 +72,7 @@ void cas::Node4::ForEachChild(uint8_t low, uint8_t high,
 }
 
 
-bool cas::Node4::IsFull() {
+bool cas::Node4::IsFull() const {
   return nr_children_ >= 4;
 }
 

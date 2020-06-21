@@ -10,6 +10,104 @@
 
 
 TEST_CASE("Test Path Only Queries", "[cas::Query]") {
+  cas::SurrogateCas<cas::vint64_t> index(cas::IndexType::ZOrder, 10, 2);
+
+  /* auto index = GENERATE( */
+  /*     std::make_shared<cas::Cas<cas::vint64_t>>(cas::IndexType::DynamicInterleaving), */
+  /*     std::make_shared<cas::Cas<cas::vint64_t>>(cas::IndexType::PathValue), */
+  /*     std::make_shared<cas::Cas<cas::vint64_t>>(cas::IndexType::ValuePath), */
+  /*     std::make_shared<cas::Cas<cas::vint64_t>>(cas::IndexType::LabelWise) */
+  /* ); */
+
+  /* auto index = GENERATE( */
+  /*     std::make_shared<cas::SurrogateCas<cas::vint64_t>>(cas::IndexType::ZOrder, 10, 2), */
+  /*     std::make_shared<cas::SurrogateCas<cas::vint64_t>>(cas::IndexType::DynamicInterleaving, 10, 2), */
+  /*     std::make_shared<cas::SurrogateCas<cas::vint64_t>>(cas::IndexType::PathValue, 10, 2), */
+  /*     std::make_shared<cas::SurrogateCas<cas::vint64_t>>(cas::IndexType::ValuePath, 10, 2) */
+  /* ); */
+
+
+  cas::vint64_t val = 1;
+  cas::Key<cas::vint64_t> key1("/ab/aa/abc", val, 1);
+  cas::Key<cas::vint64_t> key2("/ab/aa/abd", val, 2);
+  cas::Key<cas::vint64_t> key3("/ab/aa/ab/cc/abd", val, 3);
+  cas::Key<cas::vint64_t> key4("/ab/aa/ab/cc/ac", val, 4);
+  cas::Key<cas::vint64_t> key5("/ab/abd", val, 5);
+  cas::Key<cas::vint64_t> key6("/ab/abd/cc/de/abd", val, 6);
+  cas::Key<cas::vint64_t> key7("/ab/abd/cc/de/bd", val, 7);
+
+  index.Insert(key1);
+  index.Insert(key2);
+  index.Insert(key3);
+  index.Insert(key4);
+  index.Insert(key5);
+  index.Insert(key6);
+  index.Insert(key7);
+
+  auto evaluate = [&](cas::SearchKey<cas::vint64_t>& skey,
+                      vector_key_t<cas::vint64_t>& expected) -> void {
+    vector_key_t<cas::vint64_t> result;
+    index.Query(skey, [&](cas::Key<cas::vint64_t> match) -> void {
+      result.push_back(match);
+    });
+    REQUIRE(Comparator::Equals(expected, result));
+  };
+
+  SECTION("Query1") {
+    cas::SearchKey<cas::vint64_t> skey;
+    skey.low_  = val;
+    skey.high_ = val;
+    skey.path_ = "/ab/?/ab^ac";
+
+    vector_key_t<cas::vint64_t> expected = {
+      key4
+    };
+    evaluate(skey, expected);
+  }
+
+
+  SECTION("Query2") {
+    cas::SearchKey<cas::vint64_t> skey;
+    skey.low_  = val;
+    skey.high_ = val;
+    skey.path_ = "^";
+
+    vector_key_t<cas::vint64_t> expected = {
+      key1, key2, key3, key4, key5, key6, key7
+    };
+    evaluate(skey, expected);
+  }
+
+
+  SECTION("Query3") {
+    cas::SearchKey<cas::vint64_t> skey;
+    skey.low_  = val;
+    skey.high_ = val;
+    skey.path_ = "/ab/aa^";
+
+    vector_key_t<cas::vint64_t> expected = {
+      key1, key2, key3, key4
+    };
+    evaluate(skey, expected);
+  }
+
+
+  SECTION("Query4") {
+    cas::SearchKey<cas::vint64_t> skey;
+    skey.low_  = val;
+    skey.high_ = val;
+    skey.path_ = "^abd";
+
+    vector_key_t<cas::vint64_t> expected = {
+      key2, key3, key5, key6
+    };
+    evaluate(skey, expected);
+  }
+}
+
+
+
+TEST_CASE("Test Path Only Queries", "[cas::Query]") {
   /* auto index = GENERATE( */
   /*     cas::Cas<cas::vint64_t>(cas::IndexType::DynamicInterleaving), */
   /*     cas::Cas<cas::vint64_t>(cas::IndexType::PathValue), */
@@ -25,13 +123,21 @@ TEST_CASE("Test Path Only Queries", "[cas::Query]") {
 
 
   cas::vint64_t val = 1;
-  cas::Key<cas::vint64_t> key1(val, {"ab", "aa", "abc"}, 1);
-  cas::Key<cas::vint64_t> key2(val, {"ab", "aa", "abd"}, 2);
-  cas::Key<cas::vint64_t> key3(val, {"ab", "aa", "ab", "cc", "abd"}, 3);
-  cas::Key<cas::vint64_t> key4(val, {"ab", "aa", "ab", "cc", "ac"}, 4);
-  cas::Key<cas::vint64_t> key5(val, {"ab", "abd" }, 5);
-  cas::Key<cas::vint64_t> key6(val, {"ab", "abd", "cc", "de", "abd" }, 6);
-  cas::Key<cas::vint64_t> key7(val, {"ab", "abd", "cc", "de", "bd" }, 7);
+  /* cas::Key<cas::vint64_t> key1(val, {"ab", "aa", "abc"}, 1); */
+  /* cas::Key<cas::vint64_t> key2(val, {"ab", "aa", "abd"}, 2); */
+  /* cas::Key<cas::vint64_t> key3(val, {"ab", "aa", "ab", "cc", "abd"}, 3); */
+  /* cas::Key<cas::vint64_t> key4(val, {"ab", "aa", "ab", "cc", "ac"}, 4); */
+  /* cas::Key<cas::vint64_t> key5(val, {"ab", "abd" }, 5); */
+  /* cas::Key<cas::vint64_t> key6(val, {"ab", "abd", "cc", "de", "abd" }, 6); */
+  /* cas::Key<cas::vint64_t> key7(val, {"ab", "abd", "cc", "de", "bd" }, 7); */
+
+  cas::Key<cas::vint64_t> key1("/ab/aa/abc", val, 1);
+  cas::Key<cas::vint64_t> key2("/ab/aa/abd", val, 2);
+  cas::Key<cas::vint64_t> key3("/ab/aa/ab/cc/abd", val, 3);
+  cas::Key<cas::vint64_t> key4("/ab/aa/ab/cc/ac", val, 4);
+  cas::Key<cas::vint64_t> key5("/ab/abd", val, 5);
+  cas::Key<cas::vint64_t> key6("/ab/abd/cc/de/abd", val, 6);
+  cas::Key<cas::vint64_t> key7("/ab/abd/cc/de/bd", val, 7);
 
   index.Insert(key1);
   index.Insert(key2);
@@ -118,14 +224,14 @@ TEST_CASE("Test Value Only Queries", "[cas::Query]") {
   /*     cas::SurrogateCas<cas::vstring_t>(cas::IndexType::ValuePath, 10, 2) */
   /* ); */
 
-  std::vector<cas::vstring_t> path = { "does", "not", "matter" };
-  cas::Key<cas::vstring_t> key1("abbbc", path, 1);
-  cas::Key<cas::vstring_t> key2("abdcbb", path, 2);
-  cas::Key<cas::vstring_t> key3("abdgcd", path, 3);
-  cas::Key<cas::vstring_t> key4("abdgcdgh", path, 4);
-  cas::Key<cas::vstring_t> key5("abdgcdikemx", path, 5);
-  cas::Key<cas::vstring_t> key6("abdgcdikeo", path, 6);
-  cas::Key<cas::vstring_t> key7("abf", path, 7);
+  std::string path = "/does/not/matter";
+  cas::Key<cas::vstring_t> key1(path, "abbbc", 1);
+  cas::Key<cas::vstring_t> key2(path, "abdcbb", 2);
+  cas::Key<cas::vstring_t> key3(path, "abdgcd", 3);
+  cas::Key<cas::vstring_t> key4(path, "abdgcdgh", 4);
+  cas::Key<cas::vstring_t> key5(path, "abdgcdikemx", 5);
+  cas::Key<cas::vstring_t> key6(path, "abdgcdikeo", 6);
+  cas::Key<cas::vstring_t> key7(path, "abf", 7);
 
   index.Insert(key1);
   index.Insert(key2);
@@ -225,38 +331,38 @@ TEST_CASE("Test Mixed Queries", "[cas::Query]") {
   /*     cas::SurrogateCas<cas::vstring_t>(cas::IndexType::ValuePath, 10, 2) */
   /* ); */
 
-  cas::Key<cas::vstring_t> key01("uu", {"a", "a"},  1);
-  cas::Key<cas::vstring_t> key02("uv", {"a", "a"},  2);
-  cas::Key<cas::vstring_t> key03("ux", {"a", "b"},  3);
-  cas::Key<cas::vstring_t> key04("uy", {"a", "b"},  4);
-  cas::Key<cas::vstring_t> key05("vu", {"a", "c"},  5);
-  cas::Key<cas::vstring_t> key06("vv", {"a", "c"},  6);
-  cas::Key<cas::vstring_t> key07("vx", {"a", "d"},  7);
-  cas::Key<cas::vstring_t> key08("vy", {"a", "d"},  8);
-  cas::Key<cas::vstring_t> key09("uu", {"b", "a"},  9);
-  cas::Key<cas::vstring_t> key10("uv", {"b", "a"}, 10);
-  cas::Key<cas::vstring_t> key11("ux", {"b", "b"}, 11);
-  cas::Key<cas::vstring_t> key12("uy", {"b", "b"}, 12);
-  cas::Key<cas::vstring_t> key13("vu", {"b", "c"}, 13);
-  cas::Key<cas::vstring_t> key14("vv", {"b", "c"}, 14);
-  cas::Key<cas::vstring_t> key15("vx", {"b", "d"}, 15);
-  cas::Key<cas::vstring_t> key16("vy", {"b", "d"}, 16);
-  cas::Key<cas::vstring_t> key17("xu", {"c", "a"}, 17);
-  cas::Key<cas::vstring_t> key18("xv", {"c", "a"}, 18);
-  cas::Key<cas::vstring_t> key19("xx", {"c", "b"}, 19);
-  cas::Key<cas::vstring_t> key20("xy", {"c", "b"}, 20);
-  cas::Key<cas::vstring_t> key21("yu", {"c", "c"}, 21);
-  cas::Key<cas::vstring_t> key22("yv", {"c", "c"}, 22);
-  cas::Key<cas::vstring_t> key23("yx", {"c", "d"}, 23);
-  cas::Key<cas::vstring_t> key24("yy", {"c", "d"}, 24);
-  cas::Key<cas::vstring_t> key25("xu", {"d", "a"}, 25);
-  cas::Key<cas::vstring_t> key26("xv", {"d", "a"}, 26);
-  cas::Key<cas::vstring_t> key27("xx", {"d", "b"}, 27);
-  cas::Key<cas::vstring_t> key28("xy", {"d", "b"}, 28);
-  cas::Key<cas::vstring_t> key29("yu", {"d", "c"}, 29);
-  cas::Key<cas::vstring_t> key30("yv", {"d", "c"}, 30);
-  cas::Key<cas::vstring_t> key31("yx", {"d", "d"}, 31);
-  cas::Key<cas::vstring_t> key32("yy", {"d", "d"}, 32);
+  cas::Key<cas::vstring_t> key01("/a/a", "uu",  1);
+  cas::Key<cas::vstring_t> key02("/a/a", "uv",  2);
+  cas::Key<cas::vstring_t> key03("/a/b", "ux",  3);
+  cas::Key<cas::vstring_t> key04("/a/b", "uy",  4);
+  cas::Key<cas::vstring_t> key05("/a/c", "vu",  5);
+  cas::Key<cas::vstring_t> key06("/a/c", "vv",  6);
+  cas::Key<cas::vstring_t> key07("/a/d", "vx",  7);
+  cas::Key<cas::vstring_t> key08("/a/d", "vy",  8);
+  cas::Key<cas::vstring_t> key09("/b/a", "uu",  9);
+  cas::Key<cas::vstring_t> key10("/b/a", "uv", 10);
+  cas::Key<cas::vstring_t> key11("/b/b", "ux", 11);
+  cas::Key<cas::vstring_t> key12("/b/b", "uy", 12);
+  cas::Key<cas::vstring_t> key13("/b/c", "vu", 13);
+  cas::Key<cas::vstring_t> key14("/b/c", "vv", 14);
+  cas::Key<cas::vstring_t> key15("/b/d", "vx", 15);
+  cas::Key<cas::vstring_t> key16("/b/d", "vy", 16);
+  cas::Key<cas::vstring_t> key17("/c/a", "xu", 17);
+  cas::Key<cas::vstring_t> key18("/c/a", "xv", 18);
+  cas::Key<cas::vstring_t> key19("/c/b", "xx", 19);
+  cas::Key<cas::vstring_t> key20("/c/b", "xy", 20);
+  cas::Key<cas::vstring_t> key21("/c/c", "yu", 21);
+  cas::Key<cas::vstring_t> key22("/c/c", "yv", 22);
+  cas::Key<cas::vstring_t> key23("/c/d", "yx", 23);
+  cas::Key<cas::vstring_t> key24("/c/d", "yy", 24);
+  cas::Key<cas::vstring_t> key25("/d/a", "xu", 25);
+  cas::Key<cas::vstring_t> key26("/d/a", "xv", 26);
+  cas::Key<cas::vstring_t> key27("/d/b", "xx", 27);
+  cas::Key<cas::vstring_t> key28("/d/b", "xy", 28);
+  cas::Key<cas::vstring_t> key29("/d/c", "yu", 29);
+  cas::Key<cas::vstring_t> key30("/d/c", "yv", 30);
+  cas::Key<cas::vstring_t> key31("/d/d", "yx", 31);
+  cas::Key<cas::vstring_t> key32("/d/d", "yy", 32);
 
   index.Insert(key01);
   index.Insert(key02);

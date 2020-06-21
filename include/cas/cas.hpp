@@ -25,6 +25,11 @@ public:
 
   ~Cas() override;
 
+  Cas(const Cas<VType>& other) = delete;
+  Cas(const Cas<VType>&& other) = delete;
+  Cas<VType>& operator=(const Cas<VType>& other) = delete;
+  Cas<VType>& operator=(Cas<VType>&& other) = delete;
+
   void Insert(Key<VType>& key) override;
 
   void Insert(BinaryKey& bkey);
@@ -33,16 +38,16 @@ public:
 
   uint64_t BulkLoad(std::deque<BinaryKey>& keys);
 
-  const QueryStats QueryRuntime(SearchKey<VType>& key) override;
+  QueryStats QueryRuntime(SearchKey<VType>& key) override;
 
-  const QueryStats Query(SearchKey<VType>& key,
-      Emitter<VType> emitter) override;
+  QueryStats Query(SearchKey<VType>& key,
+      const Emitter<VType>& emitter) override;
 
-  const QueryStats Query(SearchKey<VType>& key,
-      BinaryKeyEmitter emitter);
+  QueryStats Query(SearchKey<VType>& key,
+      const BinaryKeyEmitter& emitter);
 
-  const QueryStats Query(SearchKey<VType>& key,
-      RefEmitter emitter);
+  QueryStats Query(SearchKey<VType>& key,
+      const RefEmitter& emitter);
 
   void Describe() const override;
 
@@ -52,7 +57,7 @@ public:
 
   size_t Size() const;
 
-  const cas::IndexStats Stats() const override;
+  cas::IndexStats Stats() const override;
 
   size_t NrKeys() const override;
 

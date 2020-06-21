@@ -23,7 +23,7 @@ public:
     return true;
   };
 
-  inline bool IsFull() override {
+  inline bool IsFull() const override {
     return true;
   }
 
@@ -37,7 +37,7 @@ public:
 
   void ReplaceBytePointer(uint8_t key_byte, Node* child) override;
 
-  void ForEachChild(uint8_t low, uint8_t high, ChildIt callback) override;
+  void ForEachChild(uint8_t low, uint8_t high, const ChildIt& callback) override;
 
   size_t SizeBytes() override;
 

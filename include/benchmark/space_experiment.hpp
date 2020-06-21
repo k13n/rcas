@@ -13,17 +13,16 @@ namespace benchmark {
 template<class VType>
 class SpaceExperiment {
 private:
-  const std::string dataset_filename_;
+  const std::string& dataset_filename_;
   const char dataset_delim_;
-  const std::vector<Approach> approaches_;
+  const std::vector<Approach>& approaches_;
   std::vector<cas::IndexStats> results_;
-  double bytes_per_key_;
 
 public:
   SpaceExperiment(
-      const std::string dataset_filename,
+      const std::string& dataset_filename,
       const char dataset_delim,
-      const std::vector<Approach> approaches
+      const std::vector<Approach>& approaches
   );
 
   void Run();

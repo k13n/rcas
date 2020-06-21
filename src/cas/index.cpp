@@ -3,12 +3,7 @@
 #include <iostream>
 
 template<class VType>
-cas::Index<VType>::~Index() {
-}
-
-
-template<class VType>
-const cas::QueryStats cas::Index<VType>::QueryVerbose(
+cas::QueryStats cas::Index<VType>::QueryVerbose(
     cas::SearchKey<VType>& key) {
   key.Dump();
   std::cout << std::endl;

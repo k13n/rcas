@@ -5,15 +5,17 @@
 
 
 cas::Node16::Node16(cas::Dimension dimension)
-    : cas::Node(dimension) {
-  memset(keys_, 0, 16*sizeof(uint8_t));
-  memset(children_, 0, 16*sizeof(uintptr_t));
+    : cas::Node(dimension)
+    , keys_{0}
+    , children_{nullptr} {
+  memset(static_cast<uint8_t*>(keys_), 0, 16*sizeof(uint8_t));
+  memset(static_cast<Node**>(children_), 0, 16*sizeof(uintptr_t));
 }
 
 
 void cas::Node16::Put(uint8_t key_byte, Node* child) {
   if (nr_children_ >= 16) {
-    // TODO
+    // TODO(@kevin)
     exit(-1);
   }
   int pos = 0;
@@ -39,7 +41,7 @@ cas::Node* cas::Node16::LocateChild(uint8_t key_byte) {
 
 
 cas::Node* cas::Node16::Grow() {
-  cas::Node48* node48 = new cas::Node48(dimension_);
+  auto* node48 = new cas::Node48(dimension_);
   node48->nr_children_ = 16;
   node48->separator_pos_ = separator_pos_;
   node48->prefix_ = std::move(prefix_);
@@ -58,12 +60,12 @@ void cas::Node16::ReplaceBytePointer(uint8_t key_byte, cas::Node* child) {
       return;
     }
   }
-  assert(false);
+  assert(false); // NOLINT
 }
 
 
 void cas::Node16::ForEachChild(uint8_t low, uint8_t high,
-                                 cas::ChildIt callback) {
+                               const cas::ChildIt& callback) {
   for (int i = nr_children_-1; i >= 0 && keys_[i] >= low; --i) {
     if (keys_[i] <= high) {
       callback(keys_[i], *children_[i]);
@@ -72,7 +74,7 @@ void cas::Node16::ForEachChild(uint8_t low, uint8_t high,
 }
 
 
-bool cas::Node16::IsFull() {
+bool cas::Node16::IsFull() const {
   return nr_children_ >= 16;
 }
 

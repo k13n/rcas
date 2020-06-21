@@ -10,13 +10,14 @@
 
 template<class VType>
 cas::CsvImporter<VType>::CsvImporter(cas::Index<VType>& index, char delimiter)
-    : index_(index),
-    delimiter_(delimiter) {
-}
+    : index_(index)
+    , delimiter_(delimiter)
+    , highest_ref_(0)
+{ }
 
 
 template<class VType>
-void cas::CsvImporter<VType>::Load(std::string filename) {
+void cas::CsvImporter<VType>::Load(const std::string& filename) {
   highest_ref_ = 0;
   std::ifstream infile(filename);
   if (!infile.is_open()) {
@@ -31,7 +32,7 @@ void cas::CsvImporter<VType>::Load(std::string filename) {
 
 
 template<class VType>
-uint64_t cas::CsvImporter<VType>::BulkLoad(std::string filename) {
+uint64_t cas::CsvImporter<VType>::BulkLoad(const std::string& filename) {
   std::deque<cas::Key<VType>> keys;
   highest_ref_ = 0;
   std::ifstream infile(filename);
@@ -48,22 +49,18 @@ uint64_t cas::CsvImporter<VType>::BulkLoad(std::string filename) {
 
 
 template<class VType>
-const cas::Key<VType> cas::CsvImporter<VType>::ProcessLine(const std::string& line) {
+cas::Key<VType> cas::CsvImporter<VType>::ProcessLine(const std::string& line) {
   cas::Key<VType> key;
 
   std::stringstream line_stream(line);
-  std::string path, value, ref;
+  std::string path;
+  std::string value;
+  std::string ref;
   std::getline(line_stream, path,  delimiter_);
   std::getline(line_stream, value, delimiter_);
   std::getline(line_stream, ref,   delimiter_);
 
-  std::stringstream path_stream(path);
-  std::string label;
-  while (std::getline(path_stream, label, '/')) {
-    if (!label.empty()) {
-      key.path_.push_back(label);
-    }
-  }
+  key.path_  = path;
   key.value_ = ParseValue(value);
   key.ref_   = ref.empty() ?
                 highest_ref_ + 1 :

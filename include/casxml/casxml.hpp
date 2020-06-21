@@ -25,11 +25,11 @@ class CasXml : public cas::Index<VType> {
     casxml::Allocator<std::pair<VType, Entry>>
   >;
 
-  cas::Cas<cas::vstring_t> data_guide_;
+  cas::Cas<cas::vint32_t> data_guide_;
   BTree btree_;
   uint64_t max_pcr_ = 0;
 
-  using pcr_map = std::unordered_map<uint64_t, std::vector<std::string>>;
+  using pcr_map = std::unordered_map<uint64_t, std::string>;
   using btree_iterator = typename BTree::iterator;
 
 public:
@@ -37,7 +37,12 @@ public:
     data_guide_(cas::IndexType::DynamicInterleaving)
   {}
 
-  ~CasXml() override;
+  ~CasXml() override = default;
+
+  CasXml(const CasXml<VType>& other) = delete;
+  CasXml(const CasXml<VType>&& other) = delete;
+  CasXml<VType>& operator=(const CasXml<VType>& other) = delete;
+  CasXml<VType>& operator=(CasXml<VType>&& other) = delete;
 
   void Insert(cas::Key<VType>& key) override;
 
@@ -45,26 +50,26 @@ public:
 
   uint64_t BulkLoad(std::deque<cas::Key<VType>>& keys) override;
 
-  const cas::QueryStats Query(cas::SearchKey<VType>& key,
-      cas::Emitter<VType> emitter) override;
+  cas::QueryStats Query(cas::SearchKey<VType>& key,
+      const cas::Emitter<VType>& emitter) override;
 
-  const cas::QueryStats Query(cas::SearchKey<VType>& key,
-      bool decode, cas::Emitter<VType> emitter);
+  cas::QueryStats Query(cas::SearchKey<VType>& key,
+      bool decode, const cas::Emitter<VType>& emitter);
 
-  const cas::QueryStats QueryRuntime(cas::SearchKey<VType>& key) override;
+  cas::QueryStats QueryRuntime(cas::SearchKey<VType>& key) override;
 
   void Dump();
 
   void Describe() const override;
 
-  const cas::IndexStats Stats() const override;
+  cas::IndexStats Stats() const override;
 
   size_t NrKeys() const override;
 
 private:
   uint64_t ComputePcr(cas::Key<VType>& key);
 
-  const pcr_map QueryDataGuide(cas::SearchKey<VType>& key,
+  pcr_map QueryDataGuide(cas::SearchKey<VType>& key,
       cas::QueryStats& stats, bool decode);
 
   std::string CasType() const;

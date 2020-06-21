@@ -48,18 +48,18 @@ void cas::KeyDecoder<VType>::DecodePath(
     cas::Key<VType>& key,
     const std::vector<uint8_t>& buffer,
     int& offset) {
-  std::size_t size = 0;
-  while (buffer[offset] != kNullByte) {
-    ++offset;
-    size = 0;
-    while (buffer[offset+size] != kNullByte && buffer[offset+size] != kPathSep) {
-      ++size;
-    }
-    char label_buffer[size];
-    MemCpyFromBuffer(buffer, offset, label_buffer, size);
-    key.path_.push_back(std::string(label_buffer, size));
+  size_t size = 0;
+  while (buffer[offset+size] != kNullByte) {
+    ++size;
   }
-  ++offset; // skip the kNullByte
+  key.path_.reserve(size);
+  for (size_t i = 0; i < size; ++i) {
+    if (buffer[offset+i] == static_cast<uint8_t>(cas::PathMask::PathSeperator)) {
+      key.path_.push_back('/');
+    } else {
+      key.path_.push_back(buffer[offset+i]);
+    }
+  }
 }
 
 
@@ -75,8 +75,8 @@ void cas::KeyDecoder<VType>::DecodePath(
       bytes[i] = buffer[pos];
     }
     std::string label = surrogate.MapLabelInv(bytes);
-    if (label != "") {
-      key.path_.push_back(label);
+    if (!label.empty()) {
+      key.path_ += ("/" + label);
     }
   }
 }
@@ -113,13 +113,15 @@ void cas::KeyDecoder<std::string>::DecodeValue(
   while (buffer[offset+size] != kNullByte) {
     ++size;
   }
-  char value_buffer[size];
-  MemCpyFromBuffer(buffer, offset, value_buffer, size);
-  key.value_ = std::string(value_buffer, size);
-  ++offset; // skip kNullByte
+  if (size > 0) {
+    char value_buffer[size]; // NOLINT
+    MemCpyFromBuffer(buffer, offset, value_buffer, size); // NOLINT
+    key.value_ = std::string(value_buffer, size); // NOLINT
+    ++offset; // skip kNullByte
+  }
 }
 
-}
+} // namespace cas
 
 
 // explicit instantiations to separate header from implementation

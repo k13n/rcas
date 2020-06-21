@@ -51,15 +51,15 @@ TEST_CASE("MapPath", "[cas::Surrogate]") {
   int bytes_per_label = 3;
 
   cas::Surrogate sg(max_depth, bytes_per_label);
-  std::vector<std::string> path = { "foo", "barr", "baz" };
+  std::string path = "/foo/barr/baz";
   std::vector<uint8_t> spath = sg.MapPath(path);
 
   REQUIRE(spath.size() == max_depth * bytes_per_label);
   REQUIRE(sg.NrBytes() == max_depth * bytes_per_label);
 
-  std::vector<uint8_t> v01 = sg.MapLabel(path[0]);
-  std::vector<uint8_t> v02 = sg.MapLabel(path[1]);
-  std::vector<uint8_t> v03 = sg.MapLabel(path[2]);
+  std::vector<uint8_t> v01 = sg.MapLabel("foo");
+  std::vector<uint8_t> v02 = sg.MapLabel("barr");
+  std::vector<uint8_t> v03 = sg.MapLabel("baz");
 
   REQUIRE(Comparator::Equals(v01, {0x00, 0x00, 0x01}));
   REQUIRE(Comparator::Equals(v02, {0x00, 0x00, 0x02}));

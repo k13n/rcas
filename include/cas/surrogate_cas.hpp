@@ -18,22 +18,26 @@ private:
 
 public:
   SurrogateCas(IndexType type, size_t s_max_depth, size_t s_bytes_per_label);
+  ~SurrogateCas() = default;
 
-  ~SurrogateCas();
+  SurrogateCas(const SurrogateCas<VType>& other) = delete;
+  SurrogateCas(const SurrogateCas<VType>&& other) = delete;
+  SurrogateCas<VType>& operator=(const SurrogateCas<VType>& other) = delete;
+  SurrogateCas<VType>& operator=(SurrogateCas<VType>&& other) = delete;
 
   void Insert(Key<VType>& key) override;
 
   uint64_t BulkLoad(std::deque<Key<VType>>& keys) override;
 
-  const QueryStats Query(SearchKey<VType>& key,
-      Emitter<VType> emitter) override;
+  QueryStats Query(SearchKey<VType>& key,
+      const Emitter<VType>& emitter) override;
 
-  const QueryStats Query(SearchKey<VType>& key,
-      BinaryKeyEmitter emitter);
+  QueryStats Query(SearchKey<VType>& key,
+      const BinaryKeyEmitter& emitter);
 
-  const QueryStats QueryRuntime(SearchKey<VType>& key) override;
+  QueryStats QueryRuntime(SearchKey<VType>& key) override;
 
-  const cas::IndexStats Stats() const override;
+  cas::IndexStats Stats() const override;
 
   size_t NrKeys() const override;
 

@@ -86,7 +86,7 @@ bool cas::PathMatcher::MatchPath(
 }
 
 
-void cas::PathMatcher::State::Dump() {
+void cas::PathMatcher::State::Dump() const {
   std::cout << "ppos_: " << ppos_ << std::endl;
   std::cout << "qpos_: " << qpos_ << std::endl;
   std::cout << "desc_ppos_: " << desc_ppos_ << std::endl;

@@ -1,7 +1,7 @@
 #include "benchmark/benchmarks.hpp"
 
 
-void DatasetSF(std::string dataset_folder) {
+void DatasetSF(const std::string& dataset_folder) {
   using VType = cas::vint64_t;
   using Exp = benchmark::CostExperiment<VType>;
 
@@ -27,7 +27,7 @@ void DatasetSF(std::string dataset_folder) {
 }
 
 
-void DatasetXMark(std::string dataset_folder) {
+void DatasetXMark(const std::string& dataset_folder) {
   using VType = cas::vint32_t;
   using Exp = benchmark::CostExperiment<VType>;
 
@@ -46,7 +46,7 @@ void DatasetXMark(std::string dataset_folder) {
 }
 
 
-void DatasetAmazon(std::string dataset_folder) {
+void DatasetAmazon(const std::string& dataset_folder) {
   using VType = cas::vint32_t;
   using Exp = benchmark::CostExperiment<VType>;
 
@@ -67,7 +67,7 @@ void DatasetAmazon(std::string dataset_folder) {
 }
 
 
-int main(int argc, char** argv) {
+int main_(int argc, char** argv) {
   std::string dataset_folder = "/storage/";
   if (argc >= 2) {
     dataset_folder = argv[1];
@@ -82,4 +82,17 @@ int main(int argc, char** argv) {
   std::cout << "dataset: Amazon:price" << std::endl;
   DatasetAmazon(dataset_folder);
   return 0;
+}
+
+
+int main(int argc, char** argv) {
+  try {
+    return main_(argc, argv);
+  } catch (std::exception& e) {
+    std::cerr << "Standard exception. What: " << e.what() << "\n";
+    return 10;
+  } catch (...) {
+    std::cerr << "Unknown exception.\n";
+    return 11;
+  }
 }

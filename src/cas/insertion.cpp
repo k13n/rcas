@@ -26,7 +26,9 @@ bool cas::Insertion::Execute() {
 
   if (loc_.matcher_.KeyFullyMatched()) {
     return AddRefToExistingLeaf();
-  } else if (loc_.matcher_.HasMismatch()) {
+  }
+
+  if (loc_.matcher_.HasMismatch()) {
     cas::Node* new_intermediate = Restructure();
     /* cas::Node* new_intermediate = SplitNode(); */
     if (loc_.parent_ == nullptr) {
@@ -35,14 +37,16 @@ bool cas::Insertion::Execute() {
       loc_.parent_->ReplaceBytePointer(loc_.parent_byte_, new_intermediate);
     }
     return true;
-  } else if (!loc_.node_->IsLeaf()) {
+  }
+
+  if (!loc_.node_->IsLeaf()) {
     // an inner node must be extended with a new child
     AddNewLeaf();
     return true;
-  } else {
-    // bkey_ is a prefix of an existing key
-    return false;
   }
+
+  // bkey_ is a prefix of an existing key
+  return false;
 }
 
 
@@ -84,7 +88,8 @@ cas::Node* cas::Insertion::Restructure() {
 
   // find the values of the discriminative bytes that distinguish
   // node_ and new_sibling
-  uint8_t dv_node, dv_sibling;
+  uint8_t dv_node = 0;
+  uint8_t dv_sibling = 0;
   if (d == cas::Dimension::Path) {
     dv_node = prefix[loc_.matcher_.node_p_pos_];
     dv_sibling = bkey_.path_[loc_.matcher_.bkey_p_pos_];
@@ -117,7 +122,7 @@ cas::Dimension cas::Insertion::DetermineDimension() {
       case cas::Dimension::Path:  return cas::Dimension::Value;
       case cas::Dimension::Value: return cas::Dimension::Path;
       default:
-        assert(false);
+        assert(false); // NOLINT
         throw std::runtime_error("Impossible");
       }
     }
@@ -145,7 +150,7 @@ void cas::Insertion::AddNewLeaf() {
         loc_.matcher_.bkey_p_pos_, loc_.matcher_.bkey_v_pos_+1);
     break;
   case cas::Dimension::Leaf:
-    assert(false);
+    assert(false); // NOLINT
     break;
   }
 
@@ -164,12 +169,12 @@ void cas::Insertion::AddNewLeaf() {
 }
 
 
-bool cas::Insertion::AddRefToExistingLeaf() {
+bool cas::Insertion::AddRefToExistingLeaf() const {
   if (!loc_.node_->IsLeaf()) {
     return false;
   }
-  cas::Node0* leaf = static_cast<cas::Node0*>(loc_.node_);
-  // TODO: what if ref_ appears multiple times?
+  auto* leaf = dynamic_cast<cas::Node0*>(loc_.node_);
+  // TODO(@kevin): what if ref_ appears multiple times?
   leaf->refs_.push_back(bkey_.ref_);
   return true;
 }

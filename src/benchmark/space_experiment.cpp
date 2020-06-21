@@ -14,9 +14,9 @@
 
 template<class VType>
 benchmark::SpaceExperiment<VType>::SpaceExperiment(
-      const std::string dataset_filename,
+      const std::string& dataset_filename,
       const char dataset_delim,
-      const std::vector<Approach> approaches)
+      const std::vector<Approach>& approaches)
   : dataset_filename_(dataset_filename)
   , dataset_delim_(dataset_delim)
   , approaches_(approaches)
@@ -57,9 +57,6 @@ void benchmark::SpaceExperiment<VType>::PopulateIndex(
 
 template<class VType>
 void benchmark::SpaceExperiment<VType>::PrintOutput() {
-  std::cout << "bytes_per_key_: " << bytes_per_key_ << std::endl;
-  std::cout << std::endl;
-
   std::cout << "dataset";
   for (const auto& approach : approaches_) {
     std::cout << "," << approach.name_;

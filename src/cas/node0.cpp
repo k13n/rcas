@@ -26,7 +26,7 @@ cas::Node0::Node0(const cas::BinaryKey& bkey, size_t path_pos, size_t value_pos)
 
 cas::Node0::Node0(const InterleavedKey& ikey, size_t pos)
     : cas::Node(cas::Dimension::Leaf) {
-  assert(ikey.bytes_.size() >= pos);
+  assert(ikey.bytes_.size() >= pos); // NOLINT
   prefix_.reserve(ikey.bytes_.size() - pos);
 
   for (size_t i = pos; i < ikey.bytes_.size(); ++i) {
@@ -46,7 +46,7 @@ cas::Node0::Node0(const InterleavedKey& ikey, size_t pos)
 
 
 void cas::Node0::Put(uint8_t /*key_byte*/, cas::Node* /*child*/) {
-  // TODO
+  // TODO(@kevin)
   exit(-1);
 }
 
@@ -62,12 +62,12 @@ bool cas::Node0::ContainsRef(cas::ref_t ref) {
 
 
 void cas::Node0::ReplaceBytePointer(uint8_t /*byte*/, cas::Node* /*child*/) {
-  assert(false);
+  assert(false); // NOLINT
 }
 
 
 void cas::Node0::ForEachChild(uint8_t /*low*/, uint8_t /*high*/,
-                                cas::ChildIt /*callback*/) {
+                              const cas::ChildIt& /*callback*/) {
   // has no children
 }
 

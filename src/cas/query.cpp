@@ -11,7 +11,7 @@ template<class VType>
 cas::Query<VType>::Query(cas::Node* root,
         cas::BinarySK& key,
         cas::PathMatcher& pm,
-        cas::BinaryKeyEmitter emitter)
+        const cas::BinaryKeyEmitter& emitter)
     : root_(root)
     , key_(key)
     , pm_(pm)
@@ -246,7 +246,7 @@ void cas::Query<VType>::DescendValueNode(State& s) {
 template<class VType>
 void cas::Query<VType>::EmitMatch(State& s) {
   assert(s.node_->IsLeaf());
-  cas::Node0* leaf = static_cast<cas::Node0*>(s.node_);
+  auto* leaf = static_cast<cas::Node0*>(s.node_);
   for (cas::ref_t& ref : leaf->refs_) {
     ++stats_.nr_matches_;
     emitter_(buf_pat_, buf_val_, ref);
@@ -268,7 +268,7 @@ void cas::Query<VType>::State::Dump() {
     assert(false);
     break;
   }
-  printf("parent_byte_: 0x%02X\n", (unsigned char) parent_byte_);
+  printf("parent_byte_: 0x%02X\n", static_cast<unsigned char>(parent_byte_)); // NOLINT
   std::cout << "len_val_: " << len_val_ << std::endl;
   std::cout << "len_pat_: " << len_pat_ << std::endl;
   pm_state_.Dump();

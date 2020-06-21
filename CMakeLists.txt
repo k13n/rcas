@@ -4,9 +4,11 @@ project (app)
 # enable compiler warnings
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
+# set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+
 
 # set the C++ version
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 # reference tlx library

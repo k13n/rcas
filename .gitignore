@@ -4,3 +4,4 @@ release_gcc/
 datasets/
 experiments/
 playground/
+.clang-tidy
