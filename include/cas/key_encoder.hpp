@@ -35,9 +35,9 @@ private:
 
   size_t ValueSize(const VType& value);
 
-  void EncodeQueryPath(SearchKey<VType>& key, BinarySK& bkey);
+  void EncodeQueryPath(SearchKey<VType>& key, std::vector<uint8_t>& buffer);
 
-  void EncodeQueryPath(SearchKey<VType>& key, BinarySK& bkey,
+  void EncodeQueryPath(SearchKey<VType>& key, BinarySK& skey,
       Surrogate& surrogate);
 
   static inline void MemCpyToBuffer(std::vector<uint8_t>& buffer, int& offset,

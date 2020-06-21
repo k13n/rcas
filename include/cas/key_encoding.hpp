@@ -3,6 +3,13 @@
 
 namespace cas {
 
+enum class PathMask : uint8_t {
+  Label         = 0xFC,
+  Wildcard      = 0xFD,
+  Descendant    = 0xFE,
+  PathSeperator = 0xFF,
+};
+
 // special byte sequences used for encoding/decoding
 const uint8_t kNullByte = 0x00;
 const uint8_t kPathSep  = 0xFF;

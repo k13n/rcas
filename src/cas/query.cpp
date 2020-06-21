@@ -112,7 +112,7 @@ void cas::Query<VType>::PrepareBuffer(State& s) {
 template<class VType>
 cas::PathMatcher::PrefixMatch
 cas::Query<VType>::MatchPathPrefix(State& s) {
-  return pm_.MatchPathIncremental(buf_pat_, key_.path_,
+  return pm_.MatchPathIncremental(buf_pat_, key_,
       s.len_pat_, s.pm_state_);
 }
 
@@ -187,8 +187,8 @@ void cas::Query<VType>::Descend(State& s) {
 template<class VType>
 void cas::Query<VType>::DescendPathNode(State& s) {
   if (s.pm_state_.desc_qpos_ != -1 ||
-      key_.path_.types_[s.pm_state_.qpos_] == cas::ByteType::kTypeDescendant ||
-      key_.path_.types_[s.pm_state_.qpos_] == cas::ByteType::kTypeWildcard) {
+      key_.path_[s.pm_state_.qpos_] == static_cast<uint8_t>(cas::PathMask::Descendant) ||
+      key_.path_[s.pm_state_.qpos_] == static_cast<uint8_t>(cas::PathMask::Wildcard)) {
     // descend all children of s.node_
     s.node_->ForEachChild([&](uint8_t byte, cas::Node& child) -> bool {
       stack_.push_back({
@@ -205,7 +205,7 @@ void cas::Query<VType>::DescendPathNode(State& s) {
     });
   } else {
     // we are looking for exactly one child
-    uint8_t byte = key_.path_.bytes_[s.pm_state_.qpos_];
+    uint8_t byte = key_.path_[s.pm_state_.qpos_];
     cas::Node* child = s.node_->LocateChild(byte);
     if (child != nullptr) {
       stack_.push_back({

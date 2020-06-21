@@ -5,7 +5,7 @@
 
 
 template<class VType>
-void cas::SearchKey<VType>::Dump() {
+void cas::SearchKey<VType>::Dump() const {
   std::cout << "SearchKey" << std::endl;
   std::cout << "Low:  " << low_ << std::endl;
   std::cout << "High: " << high_ << std::endl;
@@ -18,7 +18,7 @@ void cas::SearchKey<VType>::Dump() {
 
 
 template<class VType>
-void cas::SearchKey<VType>::DumpConcise() {
+void cas::SearchKey<VType>::DumpConcise() const {
   std::cout << "Q(";
   std::cout << path_[0];
   std::cout << ", " << low_;
@@ -28,47 +28,14 @@ void cas::SearchKey<VType>::DumpConcise() {
 }
 
 
-void cas::BinarySK::Dump() {
+void cas::BinarySK::Dump() const {
   std::cout << "SearchKey(Binary)" << std::endl;
-  std::cout << "Low:  ";
+  std::cout << "Path: ";
+  Utils::DumpHexValues(path_);
+  std::cout << "\nLow:  ";
   Utils::DumpHexValues(low_);
-  std::cout << std::endl;
-  std::cout << "High: ";
+  std::cout << "\nHigh: ";
   Utils::DumpHexValues(high_);
-  std::cout << std::endl;
-  path_.Dump();
-}
-
-
-size_t cas::BinaryQP::Size() const {
-  return bytes_.size();
-}
-
-
-void cas::BinaryQP::Dump() const {
-  std::cout << "QueryPath: ";
-  Utils::DumpHexValues(bytes_);
-  std::cout << std::endl;
-  std::cout << "PathTypes: ";
-  for (const cas::ByteType& type : types_) {
-    std::cout << "   ";
-    switch (type) {
-      case cas::ByteType::kTypeLabel:
-        std::cout << 0;
-        break;
-      case cas::ByteType::kTypePathSeperator:
-        std::cout << 1;
-        break;
-      case cas::ByteType::kTypeWildcard:
-        std::cout << 2;
-        break;
-      case cas::ByteType::kTypeDescendant:
-        std::cout << 3;
-        break;
-    }
-    std::cout << " ";
-  }
-  std::cout << std::endl;
 }
 
 

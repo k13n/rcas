@@ -7,19 +7,18 @@
 
 cas::PathMatcher::PrefixMatch cas::PathMatcher::MatchPathIncremental(
     const std::vector<uint8_t>& path,
-    const cas::BinaryQP& qpath,
+    const cas::BinarySK& skey,
     size_t len_path,
     State& s) {
-  const auto& query_path = qpath.bytes_;
   while (s.ppos_ < len_path &&
          s.desc_ppos_ < len_path &&
          path[s.ppos_] != '\0') {
-    if (s.qpos_ < query_path.size() && path[s.ppos_] == query_path[s.qpos_]) {
+    if (s.qpos_ < skey.path_.size() && path[s.ppos_] == skey.path_[s.qpos_]) {
       // simple pattern symbol matches input symbol
       ++s.ppos_;
       ++s.qpos_;
-    } else if (s.qpos_ < query_path.size() &&
-               query_path[s.qpos_] == cas::kByteChild) {
+    } else if (s.qpos_ < skey.path_.size() &&
+               skey.path_[s.qpos_] == static_cast<uint8_t>(cas::PathMask::Wildcard)) {
       // child axis is fully matched when the next path
       // separator occurs
       if (path[s.ppos_] == cas::kPathSep) {
@@ -27,8 +26,8 @@ cas::PathMatcher::PrefixMatch cas::PathMatcher::MatchPathIncremental(
       } else {
         ++s.ppos_;
       }
-    } else if (s.qpos_ < query_path.size() &&
-               query_path[s.qpos_] == cas::kByteDescendantOrSelf &&
+    } else if (s.qpos_ < skey.path_.size() &&
+               skey.path_[s.qpos_] == static_cast<uint8_t>(cas::PathMask::Descendant) &&
                path[s.ppos_] == cas::kPathSep) {
       // remember were we found the last descendant-or-self axis
       s.desc_ppos_ = s.ppos_ + 1;
@@ -61,29 +60,29 @@ cas::PathMatcher::PrefixMatch cas::PathMatcher::MatchPathIncremental(
   // we reached the end of a full path. now we can determine
   // if we fully matched it or not
   assert(path[s.ppos_] == '\0');
-  if (s.qpos_ < query_path.size() &&
-      query_path[s.qpos_] == cas::kByteChild &&
+  if (s.qpos_ < skey.path_.size() &&
+      skey.path_[s.qpos_] == static_cast<uint8_t>(cas::PathMask::Wildcard) &&
       path[s.ppos_-1] != cas::kPathSep) {
     // an empty suffix matches the pattern '?' only if the
     // last input character was an actual character
     ++s.qpos_;
   }
-  while (s.qpos_ < query_path.size() &&
-         query_path[s.qpos_] == cas::kByteDescendantOrSelf) {
+  while (s.qpos_ < skey.path_.size() &&
+         skey.path_[s.qpos_] == static_cast<uint8_t>(cas::PathMask::Descendant)) {
     // an arbitrary number of descendant-or-self steps
     // match the empty suffix
     ++s.qpos_;
   }
 
-  return (s.qpos_ == query_path.size()) ? PrefixMatch::MATCH : PrefixMatch::MISMATCH;
+  return (s.qpos_ == skey.path_.size()) ? PrefixMatch::MATCH : PrefixMatch::MISMATCH;
 }
 
 
 bool cas::PathMatcher::MatchPath(
     const std::vector<uint8_t>& path,
-    const cas::BinaryQP& qpath) {
+    const cas::BinarySK& skey) {
   State s;
-  return MatchPathIncremental(path, qpath, path.size(), s) == PrefixMatch::MATCH;
+  return MatchPathIncremental(path, skey, path.size(), s) == PrefixMatch::MATCH;
 }
 
 

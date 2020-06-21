@@ -16,7 +16,7 @@ TEST_CASE("Matching a complete path", "[cas::PathMatcher]") {
     cas::BinarySK  bskey = encoder.Encode(skey);
 
     cas::PathMatcher pm;
-    return pm.MatchPath(bikey.path_, bskey.path_);
+    return pm.MatchPath(bikey.path_, bskey);
   };
 
 
@@ -31,7 +31,7 @@ TEST_CASE("Matching a complete path", "[cas::PathMatcher]") {
     cas::BinarySK  bskey = encoder.Encode(skey, surrogate);
 
     cas::SurrogatePathMatcher pm(surrogate);
-    return pm.MatchPath(bikey.path_, bskey.path_);
+    return pm.MatchPath(bikey.path_, bskey);
   };
 
 

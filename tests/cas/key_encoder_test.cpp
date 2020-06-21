@@ -132,7 +132,7 @@ TEST_CASE("Encoding Query Path with Surrogate", "[cas::KeyEncoder]") {
   cas::SearchKey<cas::vstring_t> key;
   key.low_  = "unimportant";
   key.high_ = "unimportant";
-  key.path_ = { "/home^bar/?/baz" };
+  key.path_ = "/home^bar/?/baz";
 
   size_t max_depth = 6;
   size_t bytes_per_label = 3;
@@ -146,22 +146,22 @@ TEST_CASE("Encoding Query Path with Surrogate", "[cas::KeyEncoder]") {
   cas::BinarySK skey = encoder.Encode(key, surrogate);
 
   std::vector<uint8_t> expected_bytes = {
-    b1[0], b1[1], b1[2],         // home
-    cas::kByteDescendantOrSelf,  // ^
-    b2[0], b2[1], b2[2],         // bar
-    cas::kByteChild,             // ?
-    b3[0], b3[1], b3[2],         // baz
+    b1[0], b1[1], b1[2],                             // home
+    static_cast<uint8_t>(cas::PathMask::Descendant), // ^
+    b2[0], b2[1], b2[2],                             // bar
+    static_cast<uint8_t>(cas::PathMask::Wildcard),   // ?
+    b3[0], b3[1], b3[2],                             // baz
   };
 
-  auto tl = cas::ByteType::kTypeLabel;
-  std::vector<cas::ByteType> expected_types = {
-    tl, tl, tl,                         // home
-    cas::ByteType::kTypeDescendant,     // ^
-    tl, tl, tl,                         // bar
-    cas::ByteType::kTypeWildcard,       // ?
-    tl, tl, tl,                         // baz
+  auto tl = cas::PathMask::Label;
+  std::vector<cas::PathMask> expected_types = {
+    tl, tl, tl,                  // home
+    cas::PathMask::Descendant,   // ^
+    tl, tl, tl,                  // bar
+    cas::PathMask::Wildcard,     // ?
+    tl, tl, tl,                  // baz
   };
 
-  REQUIRE(Comparator::Equals(skey.path_.bytes_, expected_bytes));
-  REQUIRE(Comparator::Equals(skey.path_.types_, expected_types));
+  REQUIRE(Comparator::Equals(skey.path_, expected_bytes));
+  REQUIRE(Comparator::Equals(skey.mask_, expected_types));
 }

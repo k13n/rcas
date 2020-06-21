@@ -29,14 +29,14 @@ public:
 
   virtual PrefixMatch MatchPathIncremental(
       const std::vector<uint8_t>& path,
-      const cas::BinaryQP& query_path,
+      const cas::BinarySK& skey,
       size_t len_path,
       State& state);
 
 
   bool MatchPath(
       const std::vector<uint8_t>& path,
-      const cas::BinaryQP& query_path);
+      const cas::BinarySK& skey);
 
 };
 
@@ -49,7 +49,7 @@ public:
 
   virtual PrefixMatch MatchPathIncremental(
       const std::vector<uint8_t>& path,
-      const cas::BinaryQP& query_path,
+      const cas::BinarySK& skey,
       size_t len_path,
       State& state);
 };

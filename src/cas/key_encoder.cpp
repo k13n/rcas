@@ -122,7 +122,7 @@ cas::BinarySK cas::KeyEncoder<VType>::Encode(cas::SearchKey<VType>& key) {
   bkey.high_ = std::vector<uint8_t>(ValueSize(key.high_));
   EncodeValue(key.low_,  bkey.low_);
   EncodeValue(key.high_, bkey.high_);
-  EncodeQueryPath(key, bkey);
+  EncodeQueryPath(key, bkey.path_);
   return bkey;
 }
 
@@ -179,24 +179,17 @@ cas::KeyEncoder<cas::vstring_t>::EncodeValue(
 template<class VType>
 void cas::KeyEncoder<VType>::EncodeQueryPath(
     cas::SearchKey<VType>& key,
-    cas::BinarySK& bkey) {
-  auto& path = key.path_[0];
-  bkey.path_.bytes_ = std::vector<uint8_t>(path.size());
-  bkey.path_.types_ = std::vector<cas::ByteType>(path.size(),
-      cas::ByteType::kTypeLabel);
-  for (size_t i = 0; i < path.size(); ++i) {
-    if (path[i] == '?') {
-      bkey.path_.bytes_[i] = cas::kByteChild;
-      bkey.path_.types_[i] = cas::ByteType::kTypeWildcard;
-    } else if (path[i] == '^') {
-      bkey.path_.bytes_[i] = cas::kByteDescendantOrSelf;
-      bkey.path_.types_[i] = cas::ByteType::kTypeDescendant;
-    } else if (path[i] == '/') {
-      bkey.path_.bytes_[i] = cas::kPathSep;
-      bkey.path_.types_[i] = cas::ByteType::kTypePathSeperator;
+    std::vector<uint8_t>& buffer) {
+  buffer.reserve(key.path_.size());
+  for (char symbol : key.path_) {
+    if (symbol == '?') {
+      buffer.push_back(static_cast<uint8_t>(cas::PathMask::Wildcard));
+    } else if (symbol == '^') {
+      buffer.push_back(static_cast<uint8_t>(cas::PathMask::Descendant));
+    } else if (symbol == '/') {
+      buffer.push_back(static_cast<uint8_t>(cas::PathMask::PathSeperator));
     } else {
-      bkey.path_.bytes_[i] = path[i];
-      bkey.path_.types_[i] = cas::ByteType::kTypeLabel;
+      buffer.push_back(static_cast<uint8_t>(symbol));
     }
   }
 }
@@ -205,10 +198,8 @@ void cas::KeyEncoder<VType>::EncodeQueryPath(
 template<class VType>
 void cas::KeyEncoder<VType>::EncodeQueryPath(
     cas::SearchKey<VType>& key,
-    cas::BinarySK& bkey,
+    cas::BinarySK& skey,
     cas::Surrogate& surrogate) {
-  auto& path = key.path_[0];
-
   std::string label_buffer = "";
   auto flush = [&]() -> void {
     if (label_buffer.empty()) {
@@ -216,26 +207,26 @@ void cas::KeyEncoder<VType>::EncodeQueryPath(
     }
     std::vector<uint8_t> label = surrogate.MapLabel(label_buffer);
     for (size_t i = 0; i < label.size(); ++i) {
-      bkey.path_.bytes_.push_back(label[i]);
-      bkey.path_.types_.push_back(cas::ByteType::kTypeLabel);
+      skey.path_.push_back(label[i]);
+      skey.mask_.push_back(cas::PathMask::Label);
     }
     label_buffer = "";
   };
 
-  for (size_t i = 0; i < path.size(); ++i) {
-    if (path[i] == '?') {
+  for (size_t i = 0; i < key.path_.size(); ++i) {
+    if (key.path_[i] == '?') {
       flush();
-      bkey.path_.bytes_.push_back(cas::kByteChild);
-      bkey.path_.types_.push_back(cas::ByteType::kTypeWildcard);
-    } else if (path[i] == '^') {
+      skey.path_.push_back(static_cast<uint8_t>(cas::PathMask::Wildcard));
+      skey.mask_.push_back(cas::PathMask::Wildcard);
+    } else if (key.path_[i] == '^') {
       flush();
-      bkey.path_.bytes_.push_back(cas::kByteDescendantOrSelf);
-      bkey.path_.types_.push_back(cas::ByteType::kTypeDescendant);
-    } else if (path[i] == '/') {
+      skey.path_.push_back(static_cast<uint8_t>(cas::PathMask::Descendant));
+      skey.mask_.push_back(cas::PathMask::Descendant);
+    } else if (key.path_[i] == '/') {
       // do not translate '/'
       flush();
     } else {
-      label_buffer += path[i];
+      label_buffer += key.path_[i];
     }
   }
   flush();

@@ -54,7 +54,7 @@ TEST_CASE("Test Path Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vint64_t> skey;
     skey.low_  = val;
     skey.high_ = val;
-    skey.path_ = { "/ab/?/ab^ac" };
+    skey.path_ = "/ab/?/ab^ac";
 
     vector_key_t<cas::vint64_t> expected = {
       key4
@@ -67,7 +67,7 @@ TEST_CASE("Test Path Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vint64_t> skey;
     skey.low_  = val;
     skey.high_ = val;
-    skey.path_ = { "^" };
+    skey.path_ = "^";
 
     vector_key_t<cas::vint64_t> expected = {
       key1, key2, key3, key4, key5, key6, key7
@@ -80,7 +80,7 @@ TEST_CASE("Test Path Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vint64_t> skey;
     skey.low_  = val;
     skey.high_ = val;
-    skey.path_ = { "/ab/aa^" };
+    skey.path_ = "/ab/aa^";
 
     vector_key_t<cas::vint64_t> expected = {
       key1, key2, key3, key4
@@ -93,7 +93,7 @@ TEST_CASE("Test Path Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vint64_t> skey;
     skey.low_  = val;
     skey.high_ = val;
-    skey.path_ = { "^abd" };
+    skey.path_ = "^abd";
 
     vector_key_t<cas::vint64_t> expected = {
       key2, key3, key5, key6
@@ -149,7 +149,7 @@ TEST_CASE("Test Value Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "abdd";
     skey.high_ = "abdgcdh";
-    skey.path_ = { "^" };
+    skey.path_ = "^";
 
     vector_key_t<cas::vstring_t> expected = {
       key3, key4
@@ -162,7 +162,7 @@ TEST_CASE("Test Value Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "abdgcda";
     skey.high_ = "x";
-    skey.path_ = { "^" };
+    skey.path_ = "^";
 
     vector_key_t<cas::vstring_t> expected = {
       key4, key5, key6, key7
@@ -175,7 +175,7 @@ TEST_CASE("Test Value Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "aa";
     skey.high_ = "aba";
-    skey.path_ = { "^" };
+    skey.path_ = "^";
 
     vector_key_t<cas::vstring_t> expected = {
     };
@@ -187,7 +187,7 @@ TEST_CASE("Test Value Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "aa";
     skey.high_ = "x";
-    skey.path_ = { "^" };
+    skey.path_ = "^";
 
     vector_key_t<cas::vstring_t> expected = {
       key1, key2, key3, key4, key5, key6, key7
@@ -200,7 +200,7 @@ TEST_CASE("Test Value Only Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "aa";
     skey.high_ = "abdd";
-    skey.path_ = { "^" };
+    skey.path_ = "^";
 
     vector_key_t<cas::vstring_t> expected = {
       key1, key2
@@ -305,7 +305,7 @@ TEST_CASE("Test Mixed Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "v";
     skey.high_ = "xz";
-    skey.path_ = { "/b^" };
+    skey.path_ = "/b^";
 
     vector_key_t<cas::vstring_t> expected = {
       key13, key14, key15, key16
@@ -318,7 +318,7 @@ TEST_CASE("Test Mixed Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "x";
     skey.high_ = "z";
-    skey.path_ = { "/?/a" };
+    skey.path_ = "/?/a";
 
     vector_key_t<cas::vstring_t> expected = {
       key17, key18, key25, key26
@@ -331,7 +331,7 @@ TEST_CASE("Test Mixed Queries", "[cas::Query]") {
     cas::SearchKey<cas::vstring_t> skey;
     skey.low_  = "y";
     skey.high_ = "yz";
-    skey.path_ = { "/c^" };
+    skey.path_ = "/c^";
 
     vector_key_t<cas::vstring_t> expected = {
       key21, key22, key23, key24

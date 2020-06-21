@@ -19,7 +19,7 @@
 template<class VType>
 cas::SearchKey<VType> Query(std::string path, VType low, VType high) {
   cas::SearchKey<VType> skey;
-  skey.path_ = { path };
+  skey.path_ = path;
   skey.low_  = low;
   skey.high_ = high;
   return skey;
