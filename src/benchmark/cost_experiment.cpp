@@ -40,11 +40,10 @@ void benchmark::CostExperiment<VType>::Run() {
   /* int nr_repetitions = 100; */
   int nr_repetitions = 1;
   for (const auto& approach : approaches_) {
-    cas::Index<VType>* index = benchmark::CreateIndex<VType>(approach);
+    auto index = benchmark::CreateIndex<VType>(approach);
     PopulateIndex(*index);
     RunIndex(*index, nr_repetitions);
     ComputeSelectivities(*index);
-    delete index;
   }
   PrintOutput();
 }

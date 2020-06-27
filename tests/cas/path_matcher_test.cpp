@@ -40,8 +40,7 @@ TEST_CASE("Matching a complete path", "[cas::PathMatcher]") {
     cas::SearchKey<cas::vint64_t> skey;
     key.path_  = input;
     skey.path_ = pattern;
-    /* return match_normal(key, skey) && match_surrogate(key, skey); */
-    return match_surrogate(key, skey);
+    return match_normal(key, skey) && match_surrogate(key, skey);
   };
 
   SECTION("Easy") {

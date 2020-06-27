@@ -37,10 +37,9 @@ void benchmark::QueryExperiment<VType>::Run() {
 
   int nr_repetitions = 100;
   for (const auto& approach : approaches_) {
-    cas::Index<VType>* index = benchmark::CreateIndex<VType>(approach);
+    auto index = benchmark::CreateIndex<VType>(approach);
     PopulateIndex(*index);
     RunIndex(*index, nr_repetitions);
-    delete index;
   }
   PrintOutput();
 }

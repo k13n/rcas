@@ -3,12 +3,13 @@
 
 #include "cas/index.hpp"
 #include "benchmark/approach.hpp"
+#include <memory>
 
 
 namespace benchmark {
 
 template<class VType>
-cas::Index<VType>* CreateIndex(Approach approach);
+std::unique_ptr<cas::Index<VType>> CreateIndex(Approach approach);
 
 
 }; // namespace benchmark

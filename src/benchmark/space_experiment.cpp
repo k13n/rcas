@@ -30,10 +30,9 @@ void benchmark::SpaceExperiment<VType>::Run() {
   std::cout << std::endl;
 
   for (const auto& approach : approaches_) {
-    cas::Index<VType>* index = benchmark::CreateIndex<VType>(approach);
+    auto index = benchmark::CreateIndex<VType>(approach);
     PopulateIndex(*index);
     RunIndex(*index);
-    delete index;
   }
   PrintOutput();
 }

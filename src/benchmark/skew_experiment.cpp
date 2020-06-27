@@ -32,10 +32,9 @@ void benchmark::SkewExperiment<VType>::Run() {
   for (const auto& dataset : datasets_) {
     std::cout << "dataset: " << dataset.filename_ << std::endl;
     for (const auto& approach : approaches_) {
-      cas::Index<VType>* index = benchmark::CreateIndex<VType>(approach);
+      auto index = benchmark::CreateIndex<VType>(approach);
       PopulateIndex(*index, dataset.filename_);
       RunIndex(*index, nr_repetitions, dataset);
-      delete index;
     }
   }
   PrintOutput();

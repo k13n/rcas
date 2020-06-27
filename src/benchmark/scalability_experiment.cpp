@@ -26,9 +26,8 @@ void benchmark::ScalabilityExperiment::Run() {
   for (const auto& dataset : datasets_) {
     std::cout << "dataset: " << dataset.filename_ << std::endl;
     for (const auto& approach : approaches_) {
-      cas::Index<cas::vint32_t>* index = benchmark::CreateIndex<cas::vint32_t>(approach);
+      auto index = benchmark::CreateIndex<cas::vint32_t>(approach);
       RunIndex(*index, dataset);
-      delete index;
     }
   }
   PrintOutput();
