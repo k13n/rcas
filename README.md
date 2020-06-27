@@ -7,8 +7,8 @@ Data".
 
 ## Compilation
 
-The code is written in C++11. You need
-- A C++11 compliant compiler
+The code is written in C++17. You need
+- A C++17 compliant compiler
 - CMake
 
 

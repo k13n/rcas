@@ -17,7 +17,7 @@ public:
   };
 
 private:
-  const std::vector<Dataset>& datasets_;
+  const std::vector<Dataset> datasets_;
   const char dataset_delim_;
   const std::vector<Approach>& approaches_;
   std::vector<cas::IndexStats> results_;

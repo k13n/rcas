@@ -131,6 +131,7 @@ cas::Dimension cas::Insertion::DetermineDimension() {
   } else { // loc_.matcher_.value_mismatch_
     return cas::Dimension::Value;
   }
+  throw std::runtime_error{"impossible"};
 }
 
 

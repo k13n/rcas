@@ -19,7 +19,7 @@ public:
   };
 
 private:
-  const std::string& dataset_;
+  const std::string dataset_;
   const char dataset_delim_;
 
 public:
