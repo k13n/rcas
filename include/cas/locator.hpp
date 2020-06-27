@@ -21,7 +21,7 @@ public:
 
   void Locate();
 
-  void Dump();
+  void Dump() const;
 };
 
 

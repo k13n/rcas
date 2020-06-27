@@ -41,7 +41,7 @@ cas::Node* cas::Node4::LocateChild(uint8_t key_byte) {
 
 
 cas::Node* cas::Node4::Grow() {
-  cas::Node16* node16 = new cas::Node16(dimension_);
+  auto* node16 = new cas::Node16(dimension_);
   node16->nr_children_ = 4;
   node16->separator_pos_ = separator_pos_;
   node16->prefix_ = std::move(prefix_);

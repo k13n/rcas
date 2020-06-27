@@ -18,10 +18,10 @@ cas::BinaryKey::Get(cas::Dimension dimension) const {
 
 
 void cas::BinaryKey::Dump() const {
-  printf("Path  (%2lu): ", path_.size());
+  printf("Path  (%2lu): ", path_.size()); // NOLINT
   cas::Utils::DumpHexValues(path_);
   std::cout << std::endl;
-  printf("Value (%2lu): ", value_.size());
+  printf("Value (%2lu): ", value_.size()); // NOLINT
   cas::Utils::DumpHexValues(value_);
   std::cout << std::endl;
   std::cout << "Ref:        " <<  ref_;

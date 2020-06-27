@@ -46,7 +46,7 @@ void cas::Locator::Locate() {
 }
 
 
-void cas::Locator::Dump() {
+void cas::Locator::Dump() const {
   std::cout << "Locator:" << std::endl;
   std::cout << "bkey_:" << std::endl;
   bkey_.Dump();
