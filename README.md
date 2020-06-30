@@ -1,8 +1,9 @@
 # Robust Content-and-Structure (RCAS) Index
 
-This is the code for the RCAS index proposed in our paper "Dynamic Interleaving
-of Content and Structure for Robust Indexing of Semi-Structured Hierarchical
-Data".
+This is the code for our [VLDB 2020
+paper](http://www.vldb.org/pvldb/vol13/p1641-wellenzohn.pdf) titled **Dynamic
+Interleaving of Content and Structure for Robust Indexing of Semi-Structured
+Hierarchical Data**
 
 
 ## Compilation
