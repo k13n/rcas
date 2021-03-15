@@ -4,7 +4,7 @@
 
 
 void cas::InterleavedKey::Dump() const {
-  std::cout << "ref_:   " << ref_ << std::endl;
+  std::cout << "ref_:   " << cas::RefToString(ref_) << std::endl;
   std::cout << "bytes_: ";
   for (const InterleavedByte& byte : bytes_) {
     char type = 0;

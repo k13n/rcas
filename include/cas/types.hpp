@@ -2,6 +2,7 @@
 #define CAS_TYPES_H_
 
 
+#include <array>
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -9,7 +10,17 @@
 
 namespace cas {
 
-using ref_t = uint64_t;
+/* using ref_t = uint64_t; */
+using ref_t = std::array<uint8_t, 20>;
+const ref_t DEFAULT_REF{
+  0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+std::string RefToString(const ref_t& ref);
+ref_t RefFromString(const std::string& ref);
 
 // value types
 using vint32_t = int32_t;

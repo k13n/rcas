@@ -6,12 +6,13 @@
 #include "benchmark/skew_experiment.hpp"
 #include "benchmark/structure_experiment.hpp"
 #include "benchmark/scalability_experiment.hpp"
+#include "benchmark/scalability_experiment2.hpp"
 #include "benchmark/query_experiment.hpp"
 #include "benchmark/space_experiment.hpp"
 #include "benchmark/cost_experiment.hpp"
 
 #include "cas/cas.hpp"
-#include "casxml/casxml.hpp"
+/* #include "casxml/casxml.hpp" */
 
 #include <iostream>
 

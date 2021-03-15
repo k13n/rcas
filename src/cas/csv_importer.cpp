@@ -12,13 +12,13 @@ template<class VType>
 cas::CsvImporter<VType>::CsvImporter(cas::Index<VType>& index, char delimiter)
     : index_(index)
     , delimiter_(delimiter)
-    , highest_ref_(0)
+    , highest_ref_(cas::DEFAULT_REF)
 { }
 
 
 template<class VType>
 void cas::CsvImporter<VType>::Load(const std::string& filename) {
-  highest_ref_ = 0;
+  highest_ref_ = cas::DEFAULT_REF;
   std::ifstream infile(filename);
   if (!infile.is_open()) {
     throw std::invalid_argument("file cannot be opened: " + filename);
@@ -34,7 +34,7 @@ void cas::CsvImporter<VType>::Load(const std::string& filename) {
 template<class VType>
 uint64_t cas::CsvImporter<VType>::BulkLoad(const std::string& filename) {
   std::deque<cas::Key<VType>> keys;
-  highest_ref_ = 0;
+  highest_ref_ = cas::DEFAULT_REF;
   std::ifstream infile(filename);
   if (!infile.is_open()) {
     throw std::invalid_argument("file cannot be opened: " + filename);
@@ -62,9 +62,10 @@ cas::Key<VType> cas::CsvImporter<VType>::ProcessLine(const std::string& line) {
 
   key.path_  = path;
   key.value_ = ParseValue(value);
-  key.ref_   = ref.empty() ?
-                highest_ref_ + 1 :
-                std::stoull(ref);
+  if (!ref.empty()) {
+    key.ref_ = cas::RefFromString(ref);
+  }
+
   highest_ref_ = key.ref_;
 
   return key;

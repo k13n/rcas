@@ -15,7 +15,7 @@ template<class VType>
 void cas::Key<VType>::Dump() const {
   std::cout <<   "Path:  " << path_;
   std::cout << "\nValue: " << value_;
-  std::cout << "\nRef:   " << ref_;
+  std::cout << "\nRef:   " << cas::RefToString(ref_);
 }
 
 

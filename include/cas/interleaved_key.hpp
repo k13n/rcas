@@ -19,7 +19,7 @@ struct InterleavedByte {
 
 struct InterleavedKey {
   std::vector<InterleavedByte> bytes_;
-  ref_t ref_ = 0;
+  ref_t ref_;
 
   void Dump() const;
 };

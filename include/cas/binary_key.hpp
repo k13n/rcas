@@ -14,7 +14,7 @@ namespace cas {
 struct BinaryKey {
   std::vector<uint8_t> path_;
   std::vector<uint8_t> value_;
-  ref_t ref_ = 0;
+  ref_t ref_;
 
   const std::vector<uint8_t>& Get(cas::Dimension dimension) const;
 

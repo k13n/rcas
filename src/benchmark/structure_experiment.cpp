@@ -2,7 +2,7 @@
 #include "benchmark/utils.hpp"
 
 #include "cas/cas.hpp"
-#include "casxml/casxml.hpp"
+/* #include "casxml/casxml.hpp" */
 #include "cas/key.hpp"
 #include "cas/search_key.hpp"
 #include "cas/csv_importer.hpp"

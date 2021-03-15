@@ -84,7 +84,7 @@ void cas::Node0::Dump() {
   cas::Node::Dump();
   std::cout << "Refs: ";
   for (const auto& ref : refs_) {
-    std::cout << ref << " ";
+    std::cout << cas::RefToString(ref) << " ";
   }
   std::cout << std::endl;
   std::cout << std::endl;

@@ -19,7 +19,6 @@ add_subdirectory(extern/tlx)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_subdirectory(src)
-add_subdirectory(tests)
 
 # app
 add_executable(app ${CMAKE_CURRENT_SOURCE_DIR}/apps/app.cpp)
@@ -41,6 +40,9 @@ target_link_libraries(bm_skew cas tlx)
 
 add_executable(bm_scalability ${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/scalability.cpp)
 target_link_libraries(bm_scalability cas tlx)
+
+add_executable(bm_scalability2 ${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/scalability2.cpp)
+target_link_libraries(bm_scalability2 cas tlx)
 
 add_executable(bm_cost_model ${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/cost_model.cpp)
 target_link_libraries(bm_cost_model cas tlx)

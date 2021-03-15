@@ -1,7 +1,7 @@
 #include "benchmark/utils.hpp"
 #include "cas/cas.hpp"
 #include "cas/surrogate_cas.hpp"
-#include "casxml/casxml.hpp"
+/* #include "casxml/casxml.hpp" */
 
 template<class VType>
 std::unique_ptr<cas::Index<VType>> benchmark::CreateIndex(Approach approach) {
@@ -14,8 +14,8 @@ std::unique_ptr<cas::Index<VType>> benchmark::CreateIndex(Approach approach) {
     case cas::IndexType::ZOrder:
       return std::make_unique<cas::SurrogateCas<VType>>(approach.type_,
           approach.max_depth_, approach.bytes_per_label_);
-    case cas::IndexType::Xml:
-      return std::make_unique<casxml::CasXml<VType>>();
+    /* case cas::IndexType::Xml: */
+    /*   return std::make_unique<casxml::CasXml<VType>>(); */
   }
   return nullptr;
 }

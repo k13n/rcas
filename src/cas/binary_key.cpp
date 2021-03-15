@@ -24,6 +24,6 @@ void cas::BinaryKey::Dump() const {
   printf("Value (%2lu): ", value_.size()); // NOLINT
   cas::Utils::DumpHexValues(value_);
   std::cout << std::endl;
-  std::cout << "Ref:        " <<  ref_;
+  std::cout << "Ref:        " <<  cas::RefToString(ref_);
   std::cout << std::endl;
 }
