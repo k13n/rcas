@@ -1,5 +1,6 @@
 #include "cas/partition_importer.hpp"
 #include "cas/binary_key.hpp"
+#include "cas/utils.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -21,6 +22,7 @@ uint64_t cas::PartitionImporter<VType>::BulkLoad(
     size_t dataset_size,
     size_t page_size)
 {
+  cas::Utils::Log("Start reading " + filename + " " + std::to_string(dataset_size) + "\n");
   std::deque<cas::BinaryKey> keys;
 
   std::vector<uint8_t> buffer;
@@ -59,7 +61,13 @@ uint64_t cas::PartitionImporter<VType>::BulkLoad(
   }
   fclose(infile);
 
-  return index_.BulkLoad(keys);
+  cas::Utils::Log("Finished reading input\n");
+
+  cas::Utils::Log("Start bulkloading\n");
+  auto runtime =  index_.BulkLoad(keys);
+  cas::Utils::Log("Finished bulkloading\n");
+
+  return runtime;
 }
 
 

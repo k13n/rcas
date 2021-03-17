@@ -37,6 +37,9 @@ public:
 
   template<class VType>
   static std::string TypeToString();
+
+  static std::string CurrentIsoTime();
+  static void Log(const std::string& msg);
 };
 
 } // namespace cas

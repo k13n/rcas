@@ -5,6 +5,9 @@
 #include <cstring>
 #include <iostream>
 #include <sstream>
+#include <regex>
+#include <iomanip>
+#include <chrono>
 
 
 void cas::Utils::DumpHexValues(const std::vector<uint8_t>& buffer) {
@@ -86,4 +89,19 @@ std::string cas::Utils::TypeToString<cas::vint64_t>() {
 template<>
 std::string cas::Utils::TypeToString<cas::vstring_t>() {
   return "std::string";
+}
+
+
+void cas::Utils::Log(const std::string& msg) {
+  std::cout << "[" << cas::Utils::CurrentIsoTime() << "] " << msg;
+}
+
+
+std::string cas::Utils::CurrentIsoTime() {
+  auto now = std::chrono::system_clock::now();
+  auto stime = std::chrono::system_clock::to_time_t(now);
+  auto ltime = std::localtime(&stime);
+  std::stringstream stream;
+  stream << std::put_time(ltime, "%FT%T%z");
+  return stream.str();
 }

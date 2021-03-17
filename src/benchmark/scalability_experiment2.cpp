@@ -38,7 +38,7 @@ void benchmark::ScalabilityExperiment2::RunIndex(
   std::cout << "runtime_ms_: " << (load_time / 1000.0) << "\n";
   std::cout << "runtime_s_: " << (load_time /  1'000'000.0) << "\n";
   std::cout << "runtime_m_: " << (load_time / 60'000'000.0) << "\n";
-  std::cout << "runtime_h_: " << (load_time / (24*60'000'000.0)) << "\n";
+  std::cout << "runtime_h_: " << (load_time / (60*60'000'000.0)) << "\n";
   std::cout << std::endl;
   cas::IndexStats stats = index.Stats();
   results_.push_back(stats);
@@ -58,7 +58,7 @@ uint64_t benchmark::ScalabilityExperiment2::PopulateIndex(
 
 
 void benchmark::ScalabilityExperiment2::PrintOutput() {
-  std::cout << "size_b_;runtime_ms_\n";
+  std::cout << "size_b_;runtime_mus_\n";
   for (size_t i = 0; i < datasets_.size(); ++i) {
     const auto& dataset = datasets_[i];
     std::cout << dataset.dataset_size_ << ";";
